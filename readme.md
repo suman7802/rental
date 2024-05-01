@@ -1,6 +1,6 @@
 # Rent Now
 
-To use the application, you can access the frontend by clicking [here](rentaldev-afcqt3qyr-suman-sharmas-projects-e41f1818.vercel.app).
+To use the application, you can access the frontend by clicking [here](https://rentaldev.vercel.app/).
 
 ## Introduction
 
