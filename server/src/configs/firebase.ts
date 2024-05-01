@@ -27,4 +27,4 @@ const auth = getAuth(app);
 auth.useDeviceLanguage();
 
 
-export {auth};
+export default auth;

@@ -9,34 +9,50 @@ const user = {
   create: asyncCatch(
     async (req: Request, res: Response, next: NextFunction) => {
       const {email, password} = req.body;
-      const user = await authentication.signup(email, password);
 
-      const newUser = await prisma.user.create({
-        data: {
-          uid: user.uid,
-          email: user.email!,
-        },
-      });
-
-      res.status(201).json(newUser);
+      return await authentication
+        .signup(email, password)
+        .then(async (user) => {
+          if (user.code === 'auth/email-already-in-use') {
+            res.status(409).json({message: 'Email already exists'});
+          } else if (user.code === 'auth/weak-password') {
+            res.status(422).json({message: 'Weak password'});
+          } else {
+            await prisma.user.create({
+              data: {
+                uid: user.uid,
+                email: user.email!,
+              },
+            });
+            res.status(201).json({message: 'Registration successful'});
+          }
+        })
+        .catch((error) => {
+          throw new CustomError(error.message, 400);
+        });
     }
   ),
 
   login: asyncCatch(async (req: Request, res: Response, next: NextFunction) => {
     const {email, password} = req.body;
-    const userCredential = await authentication.signIn(email, password);
+    await authentication
+      .signIn(email, password)
+      .then(async (userCredential) => {
+        const uid = userCredential.user.uid;
+        const refreshToken = userCredential.user.refreshToken;
+        const idToken = await userCredential.user.getIdToken();
 
-    const uid = userCredential.user.uid;
-    const refreshToken = userCredential.user.refreshToken;
-    const idToken = await userCredential.user.getIdToken();
+        const fetchUser = await prisma.user.findUnique({
+          where: {uid},
+        });
 
-    const fetchUser = await prisma.user.findUnique({
-      where: {uid},
-    });
+        if (!fetchUser) throw new CustomError('User not found', 404);
 
-    if (!fetchUser) throw new CustomError('User not found', 404);
-
-    res.status(200).json({user: fetchUser, refreshToken, idToken});
+        res.status(200).json({user: fetchUser, refreshToken, idToken});
+      })
+      .catch((error) => {
+        throw new CustomError(error.message, 400);
+      });
   }),
 
   google: asyncCatch(

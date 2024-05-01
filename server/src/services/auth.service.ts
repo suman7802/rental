@@ -5,7 +5,7 @@ import {
   createUserWithEmailAndPassword,
 } from 'firebase/auth';
 
-import {auth} from '../configs/firebase';
+import auth from '../configs/firebase';
 
 const provider = new GoogleAuthProvider();
 
@@ -14,27 +14,34 @@ provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
 
 const authentication = {
   signup: async (email: string, password: string) => {
-    const userCredential = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-    return userCredential.user;
+    return await createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        return userCredential.user;
+      })
+      .catch((error) => {
+        return error;
+      });
   },
 
   signIn: async (email: string, password: string) => {
-    const userCredential = await signInWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-    return userCredential;
+    return await signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        return userCredential;
+      })
+      .catch((error) => {
+        return error;
+      });
   },
 
   signInWithGoogle: async () => {
-    const result = await signInWithPopup(auth, provider);
-    const credential = GoogleAuthProvider.credentialFromResult(result);
-    return {token: credential?.accessToken, user: result.user};
+    return await signInWithPopup(auth, provider)
+      .then((result) => {
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        return {token: credential?.accessToken, user: result.user};
+      })
+      .catch((error) => {
+        return error;
+      });
   },
 };
 
