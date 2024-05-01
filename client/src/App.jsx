@@ -15,7 +15,7 @@ export default function App() {
           <Route path="/" index element={<Home />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
-          <Route path="/auth" element={<Auth />} />
+          <Route path="/auth/*" element={<Auth />} />
         </Routes>
         <Footer />
       </BrowserRouter>
