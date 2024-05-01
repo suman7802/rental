@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int        @id @default(autoincrement())
+  uid         String     @unique
+  email       String     @unique
+  name        String?
+  picture     String?
+  verified    Boolean    @default(false)
+  phone       String?
+  latitude    Float?
+  longitude   Float?
+  FCMToken    String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  description String?
+  govId       String?
+  govId2      String?
+  Unit        Unit[]
+  Favorites   Favorite[] @relation("userFavorites")
+  FavoritedBy Favorite[] @relation("FavoritesByUser")
+}
+
+model Favorite {
+  id         Int      @id @default(autoincrement())
+  user       User     @relation("userFavorites", fields: [userId], references: [id])
+  userId     Int
+  business   User     @relation("FavoritesByUser", fields: [businessId], references: [id])
+  businessId Int
+  createdAt  DateTime @default(now())
+}
+
+model Unit {
+  id        Int        @id @default(autoincrement())
+  User      User       @relation(fields: [user], references: [id], onDelete: Cascade)
+  user      Int
+  name      String
+  location  String
+  latitude  Float?
+  longitude Float?
+  rent      Float
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  Image     Image[]
+  type      rentalType @default(place)
+}
+
+model Image {
+  id        Int      @id @default(autoincrement())
+  Unit      Unit     @relation(fields: [unit], references: [id], onDelete: Cascade)
+  unit      Int
+  url       String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum rentalType {
+  ride
+  thing
+  place
+}

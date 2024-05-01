@@ -1,0 +1,15 @@
+{
+  "name": "rental",
+  "version": "1.0.0",
+  "description": "To use the application, you can access the frontend by clicking [here](https://rentdevlopment.vercel.app/).",
+  "main": "index.js",
+  "scripts": {
+    "client": "cd client && npm install && npm run build",
+    "server": "cd server && npm install && npm run dev",
+    "dev": "npm run client && npm run server"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {}
+}
