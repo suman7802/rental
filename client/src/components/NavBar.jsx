@@ -1,6 +1,6 @@
 import {Link, useLocation} from 'react-router-dom';
 import {useState, useEffect} from 'react';
-import PopUpNav from './components/PopUpNav';
+import PopUpNav from './PopUpNav';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faBars, faPlus, faUser} from '@fortawesome/free-solid-svg-icons';
 

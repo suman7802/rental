@@ -3,7 +3,7 @@ import Browser from '../sections/Browser';
 import Stats from '../sections/Stats';
 import FeaturedListing from '../sections/FeaturedListing';
 import Properties from '../sections/Properties';
-import FeaturedLocations from '../FeaturedLocations';
+import FeaturedLocations from '../components/FeaturedLocations';
 
 export default function Home() {
   return (

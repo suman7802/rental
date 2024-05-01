@@ -1,4 +1,4 @@
-import ImageCard from './components/ImageCard';
+import ImageCard from './ImageCard';
 
 const locations = [
   {

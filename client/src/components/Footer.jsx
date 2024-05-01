@@ -1,4 +1,4 @@
-import SocialButton from './components/SocialButton';
+import SocialButton from './SocialButton';
 import {
   faFacebookF,
   faInstagram,
