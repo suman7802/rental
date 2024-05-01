@@ -1,6 +1,6 @@
 # Rent Now
 
-To use the application, you can access the frontend by clicking [here](https://rentdevlopment.vercel.app/).
+To use the application, you can access the frontend by clicking [here](rentaldev-afcqt3qyr-suman-sharmas-projects-e41f1818.vercel.app).
 
 ## Introduction
 
@@ -13,7 +13,7 @@ To install the project, follow these steps:
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/suman7802/rent
+git clone https://github.com/suman7802/rental
 
 ```
 
