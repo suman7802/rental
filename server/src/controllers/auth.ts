@@ -20,13 +20,21 @@ const user = {
               .status(422)
               .json({message: 'weak password, minium 6 character long'});
           } else {
-            await prisma.user.create({
+            const newUser = await prisma.user.create({
               data: {
                 uid: user.uid,
                 email: user.email!,
               },
             });
-            res.status(201).json({message: 'Registration successful'});
+
+            res.status(201).json({
+              data: {
+                newUser,
+                accessToken: user.accessToken,
+                refreshToken: user.refreshToken,
+              },
+              message: 'Registration successful',
+            });
           }
         })
         .catch((error) => {

@@ -1,23 +1,38 @@
+import {useState} from 'react';
 import {Link} from 'react-router-dom';
+import {useDispatch, useSelector} from 'react-redux';
 
+import {signIn} from '../redux/slice/auth';
 import googleSvg from '../assets/google.svg';
 import facebookSvg from '../assets/facebook.svg';
 import {signInWithGoogle, signInWithFacebook} from '../services/auth.service';
 
 export default function SignIn() {
+  const dispatch = useDispatch();
+  const {isLoading, isError, status} = useSelector((state) => state.auth);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    dispatch(signIn({email, password}));
+  }
+
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-80px)]">
       <div className="max-w-xs  rounded-xl p-6 shadow-md m-5">
         <div className="text-center font-black text-3xl text-red-600">
           Welcome back
         </div>
-        <form action="submit" className="mt-5">
+        <form onSubmit={handleSubmit} className="mt-5">
           <input
             required
             className="w-full border-none p-4 rounded-xl mt-4 shadow-md outline-none"
             type="email"
             name="email"
             id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             placeholder="E-mail"
           />
           <input
@@ -26,6 +41,8 @@ export default function SignIn() {
             type="password"
             name="password"
             id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
           />
           <span className="block mt-2 ml-2">
@@ -33,11 +50,21 @@ export default function SignIn() {
               Forgot Password ?
             </a>
           </span>
-          <input
+
+          <button
+            disabled={isLoading}
             className="block w-full font-bold bg-gradient-to-r from-red-600 to-red-500 text-white py-3 mt-5 rounded-xl shadow-lg transform transition-all hover:scale-105 active:scale-95"
-            type="submit"
-            value="Sign In"
-          />
+            type="submit">
+            Sign In
+          </button>
+          {isError && (
+            <p className="text-red-500 text-sm text-center mt-2">
+              An error occurred. Please try again.
+            </p>
+          )}
+          {status && (
+            <p className="text-green-500 text-sm text-center mt-2">{status}</p>
+          )}
         </form>
         <span className="block text-center mt-2">
           <Link to="/auth/signup" className="text-red-400 text-xs">
@@ -48,15 +75,15 @@ export default function SignIn() {
           <span className="block text-center text-xs text-gray-400">
             Or Sign in with
           </span>
-          <div className="flex justify-center gap-4 mt-4">
+          <div className="flex justify-center gap-5 mt-4">
             <button
               onClick={signInWithGoogle}
-              className="p-2 rounded-full w-10 h-10 grid place-content-center shadow-md transform transition-all hover:scale-120 active:scale-90">
+              className="p-2 rounded-full w-10 h-10 grid place-content-center shadow-md transform transition-all hover:scale-120 active:scale-90 hover:scale-125">
               <img src={googleSvg} alt="google" />
             </button>
             <button
               onClick={signInWithFacebook}
-              className="p-2 rounded-full w-10 h-10 grid place-content-center shadow-md transform transition-all hover:scale-120 active:scale-90">
+              className="p-2 rounded-full w-10 h-10 grid place-content-center shadow-md transform transition-all hover:scale-120 active:scale-90 hover:scale-125">
               <img src={facebookSvg} alt="facebook" />
             </button>
           </div>
