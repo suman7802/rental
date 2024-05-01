@@ -16,7 +16,9 @@ const user = {
           if (user.code === 'auth/email-already-in-use') {
             res.status(409).json({message: 'Email already exists'});
           } else if (user.code === 'auth/weak-password') {
-            res.status(422).json({message: 'Weak password'});
+            res
+              .status(422)
+              .json({message: 'weak password, minium 6 character long'});
           } else {
             await prisma.user.create({
               data: {
