@@ -1,21 +1,26 @@
-import {useState} from 'react';
 import {Link} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
+import {unwrapResult} from '@reduxjs/toolkit';
 import {useDispatch, useSelector} from 'react-redux';
 
-import {signIn} from '../redux/slice/auth';
+import {signIn, signInWithGoogleThunk} from '../redux/slice/auth';
 import googleSvg from '../assets/google.svg';
 import facebookSvg from '../assets/facebook.svg';
-import {signInWithGoogle, signInWithFacebook} from '../services/auth.service';
+import {setEmail, setPassword} from '../redux/slice/auth';
+import {signInWithFacebook} from '../services/auth.service';
 
 export default function SignIn() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {isLoading, isError, status} = useSelector((state) => state.auth);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const {isLoading, isError, status, email, password} = useSelector(
+    (state) => state.auth
+  );
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    dispatch(signIn({email, password}));
+    const resultAction = await dispatch(signIn());
+    unwrapResult(resultAction);
+    navigate('/');
   }
 
   return (
@@ -32,7 +37,7 @@ export default function SignIn() {
             name="email"
             id="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => dispatch(setEmail(e.target.value))}
             placeholder="E-mail"
           />
           <input
@@ -42,7 +47,7 @@ export default function SignIn() {
             name="password"
             id="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => dispatch(setPassword(e.target.value))}
             placeholder="Password"
           />
           <span className="block mt-2 ml-2">
@@ -59,10 +64,10 @@ export default function SignIn() {
           </button>
           {isError && (
             <p className="text-red-500 text-sm text-center mt-2">
-              An error occurred. Please try again.
+              {status || 'An error occurred. Please try again'}
             </p>
           )}
-          {status && (
+          {!isError && status && (
             <p className="text-green-500 text-sm text-center mt-2">{status}</p>
           )}
         </form>
@@ -77,7 +82,7 @@ export default function SignIn() {
           </span>
           <div className="flex justify-center gap-5 mt-4">
             <button
-              onClick={signInWithGoogle}
+              onClick={() => dispatch(signInWithGoogleThunk())}
               className="p-2 rounded-full w-10 h-10 grid place-content-center shadow-md transform transition-all hover:scale-120 active:scale-90 hover:scale-125">
               <img src={googleSvg} alt="google" />
             </button>

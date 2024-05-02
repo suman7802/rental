@@ -14,8 +14,6 @@ export default function Auth() {
     setLoading(true);
   };
 
-  console.log(form);
-
   return (
     <form
       ref={formRef}

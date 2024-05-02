@@ -37,7 +37,7 @@ const authentication = {
     return await signInWithPopup(auth, provider)
       .then((result) => {
         const credential = GoogleAuthProvider.credentialFromResult(result);
-        return {token: credential?.accessToken, user: result.user};
+        return {accessToken: credential?.accessToken, user: result.user};
       })
       .catch((error) => {
         return error;
