@@ -12,7 +12,7 @@ import auth from '../configs/firebase';
 import StoreRetrievePendingCredential from '../utils/StoreRetrievePendingCredential';
 
 const googleProvider = new GoogleAuthProvider();
-// const facebookProvider = new FacebookAuthProvider();
+const facebookProvider = new FacebookAuthProvider();
 
 googleProvider.setCustomParameters({login_hint: 'user@example.com'});
 googleProvider.addScope('https://www.googleapis.com/auth/contacts.readonly');
@@ -24,7 +24,7 @@ const authentication = {
         return userCredential.user;
       })
       .catch((error) => {
-        return error;
+        throw error;
       });
   },
 
@@ -34,7 +34,7 @@ const authentication = {
         return userCredential.user;
       })
       .catch((error) => {
-        return error;
+        throw error;
       });
   },
 
@@ -47,18 +47,19 @@ const authentication = {
         if (pendingCred !== null) {
           await linkWithCredential(result.user, pendingCred).then(() => {
             StoreRetrievePendingCredential.clear();
+            console.log('Link successful and pending credential cleared');
           });
         }
 
         return {credential, user: result.user};
       })
       .catch((error) => {
-        return error;
+        throw error;
       });
   },
 
   signInWithFacebook: async () => {
-    return await signInWithPopup(auth, googleProvider)
+    await signInWithPopup(auth, facebookProvider)
       .then(async (result) => {
         const credential = FacebookAuthProvider.credentialFromResult(result);
 
@@ -66,23 +67,24 @@ const authentication = {
         if (pendingCred !== null) {
           await linkWithCredential(result.user, pendingCred).then(() => {
             StoreRetrievePendingCredential.clear();
+            console.log('Link successful and pending credential cleared');
           });
         }
 
         return {accessToken: credential.accessToken, user: result.user};
       })
       .catch((error) => {
-        return error;
+        throw error;
       });
   },
 
   signOut: async () => {
-    return await signOut(auth)
+    await signOut(auth)
       .then(() => {
         return true;
       })
       .catch((error) => {
-        return error;
+        throw error;
       });
   },
 };

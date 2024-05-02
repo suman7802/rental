@@ -165,6 +165,7 @@ export const authSlice = createSlice({
         state.isError = true;
         state.status = 'Sign in failed';
       })
+
       .addCase(signOut.pending, (state) => {
         state.isLoading = true;
       })

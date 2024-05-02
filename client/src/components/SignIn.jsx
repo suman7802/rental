@@ -6,6 +6,7 @@ import {
   signInWithGoogleThunk,
   signInWithFacebookThunk,
 } from '../redux/slice/auth';
+
 import googleSvg from '../assets/google.svg';
 import facebookSvg from '../assets/facebook.svg';
 import {setEmail, setPassword} from '../redux/slice/auth';
