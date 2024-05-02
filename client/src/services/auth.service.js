@@ -30,7 +30,18 @@ const authentication = {
 
   signIn: async (email, password) => {
     return await signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+      .then(async (userCredential) => {
+        const pendingCred = StoreRetrievePendingCredential.retrieve();
+
+        if (pendingCred !== null) {
+          await linkWithCredential(userCredential.user, pendingCred).then(
+            () => {
+              StoreRetrievePendingCredential.clear();
+              console.log('Link successful and pending credential cleared');
+            }
+          );
+        }
+
         return userCredential.user;
       })
       .catch((error) => {
@@ -44,6 +55,7 @@ const authentication = {
         const credential = GoogleAuthProvider.credentialFromResult(result);
 
         const pendingCred = StoreRetrievePendingCredential.retrieve();
+
         if (pendingCred !== null) {
           await linkWithCredential(result.user, pendingCred).then(() => {
             StoreRetrievePendingCredential.clear();
@@ -54,6 +66,10 @@ const authentication = {
         return {credential, user: result.user};
       })
       .catch((error) => {
+        if (error.code === 'auth/account-exists-with-different-credential') {
+          const credential = GoogleAuthProvider.credentialFromError(error);
+          StoreRetrievePendingCredential.store(credential);
+        }
         throw error;
       });
   },
@@ -64,6 +80,7 @@ const authentication = {
         const credential = FacebookAuthProvider.credentialFromResult(result);
 
         const pendingCred = StoreRetrievePendingCredential.retrieve();
+
         if (pendingCred !== null) {
           await linkWithCredential(result.user, pendingCred).then(() => {
             StoreRetrievePendingCredential.clear();
@@ -74,6 +91,10 @@ const authentication = {
         return {accessToken: credential.accessToken, user: result.user};
       })
       .catch((error) => {
+        if (error.code === 'auth/account-exists-with-different-credential') {
+          const credential = FacebookAuthProvider.credentialFromError(error);
+          StoreRetrievePendingCredential.store(credential);
+        }
         throw error;
       });
   },

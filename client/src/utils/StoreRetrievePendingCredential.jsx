@@ -2,17 +2,17 @@ import {GoogleAuthProvider} from 'firebase/auth';
 
 const StoreRetrievePendingCredential = {
   store: (pendingCred) => {
-    localStorage.setItem('pendingCred', JSON.stringify(pendingCred));
+    localStorage.setItem('pendingCredential', JSON.stringify(pendingCred));
   },
 
   retrieve: () => {
     return GoogleAuthProvider.credential(
-      JSON.parse(localStorage.getItem('pendingCred'))
+      JSON.parse(localStorage.getItem('pendingCredential'))
     );
   },
 
   clear: () => {
-    localStorage.removeItem('pendingCred');
+    localStorage.removeItem('pendingCredential');
   },
 };
 
