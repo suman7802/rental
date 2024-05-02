@@ -33,26 +33,6 @@ export const signIn = createAsyncThunk('auth/signIn', async (_, {getState}) => {
   return handleAuthAction(authentication.signIn, email, password);
 });
 
-// export const signUp = createAsyncThunk('auth/signUp', async (_, {getState}) => {
-//   const {email, password} = getState().auth;
-//   try {
-//     const user = await authentication.signUp(email, password);
-//     return {
-//       uid: user.uid,
-//       email: user.email,
-//       credential: {
-//         accessToken: user.accessToken,
-//         refreshToken: user.refreshToken,
-//       },
-//     };
-//   } catch (error) {
-//     return {
-//       code: error.code,
-//       message: error.message,
-//     };
-//   }
-// });
-
 export const signInWithGoogleThunk = createAsyncThunk(
   'auth/signInWithGoogle',
   async () => {
@@ -94,10 +74,7 @@ export const signInWithFacebookThunk = createAsyncThunk(
 export const signOut = createAsyncThunk('auth/signOut', async () => {
   try {
     const result = await authentication.signOut();
-    if (result) {
-      AccessToken.clear();
-      RefreshToken.clear();
-    }
+    return result;
   } catch (error) {
     return {
       code: error.code,
