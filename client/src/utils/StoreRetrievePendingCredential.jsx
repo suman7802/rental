@@ -1,6 +1,6 @@
 import {GoogleAuthProvider} from 'firebase/auth';
 
-const StoreRetrievePendingCred = {
+const StoreRetrievePendingCredential = {
   store: (pendingCred) => {
     localStorage.setItem('pendingCred', JSON.stringify(pendingCred));
   },
@@ -16,4 +16,4 @@ const StoreRetrievePendingCred = {
   },
 };
 
-export default StoreRetrievePendingCred;
+export default StoreRetrievePendingCredential;

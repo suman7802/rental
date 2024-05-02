@@ -73,8 +73,6 @@ const user = {
     async (req: Request, res: Response, next: NextFunction) => {
       const {accessToken, user} = await authentication.signInWithGoogle();
 
-      console.log(accessToken, user);
-
       res.status(200).json({
         data: {
           user,

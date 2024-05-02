@@ -1,10 +1,11 @@
 import Footer from './components/Footer';
 import NavBar from './components/NavBar';
-import Home from './pages/Home';
+import Home from './home/Index';
 import Contact from './pages/Contact';
 import About from './pages/About';
 import Auth from './pages/Auth';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
+import './services/auth.service'
 
 export default function App() {
   return (

@@ -1,26 +1,24 @@
 import {Link} from 'react-router-dom';
-import {useNavigate} from 'react-router-dom';
-import {unwrapResult} from '@reduxjs/toolkit';
 import {useDispatch, useSelector} from 'react-redux';
 
-import {signIn, signInWithGoogleThunk} from '../redux/slice/auth';
+import {
+  signIn,
+  signInWithGoogleThunk,
+  signInWithFacebookThunk,
+} from '../redux/slice/auth';
 import googleSvg from '../assets/google.svg';
 import facebookSvg from '../assets/facebook.svg';
 import {setEmail, setPassword} from '../redux/slice/auth';
-import {signInWithFacebook} from '../services/auth.service';
 
 export default function SignIn() {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const {isLoading, isError, status, email, password} = useSelector(
     (state) => state.auth
   );
 
-  async function handleSubmit(e) {
+  function handleSubmit(e) {
     e.preventDefault();
-    const resultAction = await dispatch(signIn());
-    unwrapResult(resultAction);
-    navigate('/');
+    dispatch(signIn());
   }
 
   return (
@@ -87,7 +85,7 @@ export default function SignIn() {
               <img src={googleSvg} alt="google" />
             </button>
             <button
-              onClick={signInWithFacebook}
+              onClick={() => dispatch(signInWithFacebookThunk())}
               className="p-2 rounded-full w-10 h-10 grid place-content-center shadow-md transform transition-all hover:scale-120 active:scale-90 hover:scale-125">
               <img src={facebookSvg} alt="facebook" />
             </button>

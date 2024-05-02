@@ -1,6 +1,4 @@
 import {Link} from 'react-router-dom';
-import {useNavigate} from 'react-router-dom';
-import {unwrapResult} from '@reduxjs/toolkit';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {signUp} from '../redux/slice/auth';
@@ -8,16 +6,13 @@ import {setEmail, setPassword} from '../redux/slice/auth';
 
 export default function SignUp() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const {isLoading, status, isError, email, password} = useSelector(
     (state) => state.auth
   );
 
-  async function handleSubmit(e) {
+  function handleSubmit(e) {
     e.preventDefault();
-    const resultAction = await dispatch(signUp());
-    unwrapResult(resultAction);
-    navigate('/');
+    dispatch(signUp());
   }
 
   return (
@@ -60,9 +55,9 @@ export default function SignUp() {
             </span>
           )}
 
-          {isError && status && (
+          {!isLoading && isError && status && (
             <span className="block text-sm text-center mt-2 text-red-400">
-              {status || 'Something went wrong'}
+              {status}
             </span>
           )}
         </form>
