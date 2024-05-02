@@ -33,43 +33,37 @@ export const signIn = createAsyncThunk('auth/signIn', async (_, {getState}) => {
   return handleAuthAction(authentication.signIn, email, password);
 });
 
-export const signInWithGoogleThunk = createAsyncThunk(
-  'auth/signInWithGoogle',
-  async () => {
-    try {
-      const {user, credential} = await authentication.signInWithGoogle();
-      return {
-        uid: user.uid,
-        email: user.email,
-        credential,
-      };
-    } catch (error) {
-      return {
-        code: error.code,
-        message: error.message,
-      };
-    }
+export const google = createAsyncThunk('auth/google', async () => {
+  try {
+    const {user, credential} = await authentication.signInWithGoogle();
+    return {
+      uid: user.uid,
+      email: user.email,
+      credential,
+    };
+  } catch (error) {
+    return {
+      code: error.code,
+      message: error.message,
+    };
   }
-);
+});
 
-export const signInWithFacebookThunk = createAsyncThunk(
-  'auth/signInWithFacebook',
-  async () => {
-    try {
-      const {user, credential} = await authentication.signInWithFacebook();
-      return {
-        uid: user.uid,
-        email: user.email,
-        credential,
-      };
-    } catch (error) {
-      return {
-        code: error.code,
-        message: error.message,
-      };
-    }
+export const facebook = createAsyncThunk('auth/facebook', async () => {
+  try {
+    const {user, credential} = await authentication.signInWithFacebook();
+    return {
+      uid: user.uid,
+      email: user.email,
+      credential,
+    };
+  } catch (error) {
+    return {
+      code: error.code,
+      message: error.message,
+    };
   }
-);
+});
 
 export const signOut = createAsyncThunk('auth/signOut', async () => {
   try {
@@ -177,6 +171,54 @@ export const authSlice = createSlice({
       state.isLoading = false;
       state.isError = true;
       state.status = 'Sign out failed';
+    });
+
+    builder.addCase(google.pending, (state) => {
+      state.isLoading = false;
+    });
+
+    builder.addCase(google.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.response = action.payload;
+      if (action.payload.code) {
+        state.isError = true;
+        state.status = action.payload.message;
+      } else {
+        state.isError = false;
+        state.status = 'Sign in successful';
+        AccessToken.store(action.payload.credential.accessToken);
+        RefreshToken.store(action.payload.credential.refreshToken);
+      }
+    });
+
+    builder.addCase(google.rejected, (state) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.status = 'Sign in failed';
+    });
+
+    builder.addCase(facebook.pending, (state) => {
+      state.isLoading = false;
+    });
+
+    builder.addCase(facebook.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.response = action.payload;
+      if (action.payload.code) {
+        state.isError = true;
+        state.status = action.payload.message;
+      } else {
+        state.isError = false;
+        state.status = 'Sign in successful';
+        AccessToken.store(action.payload.credential.accessToken);
+        RefreshToken.store(action.payload.credential.refreshToken);
+      }
+    });
+
+    builder.addCase(facebook.rejected, (state) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.status = 'Sign in failed';
     });
   },
 });

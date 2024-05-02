@@ -1,11 +1,7 @@
 import {Link} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 
-import {
-  signIn,
-  signInWithGoogleThunk,
-  signInWithFacebookThunk,
-} from '../redux/slice/auth';
+import {signIn, google, facebook} from '../redux/slice/auth';
 
 import googleSvg from '../assets/google.svg';
 import facebookSvg from '../assets/facebook.svg';
@@ -81,12 +77,12 @@ export default function SignIn() {
           </span>
           <div className="flex justify-center gap-5 mt-4">
             <button
-              onClick={() => dispatch(signInWithGoogleThunk())}
+              onClick={() => dispatch(google())}
               className="p-2 rounded-full w-10 h-10 grid place-content-center shadow-md transform transition-all hover:scale-120 active:scale-90 hover:scale-125">
               <img src={googleSvg} alt="google" />
             </button>
             <button
-              onClick={() => dispatch(signInWithFacebookThunk())}
+              onClick={() => dispatch(facebook())}
               className="p-2 rounded-full w-10 h-10 grid place-content-center shadow-md transform transition-all hover:scale-120 active:scale-90 hover:scale-125">
               <img src={facebookSvg} alt="facebook" />
             </button>
