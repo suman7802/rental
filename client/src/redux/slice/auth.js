@@ -4,55 +4,54 @@ import AccessToken from '../../utils/AccessToken';
 import RefreshToken from '../../utils/RefreshToken';
 import authentication from '../../services/auth.service';
 
-const initialState = {
-  email: '',
-  password: '',
-  isLoading: false,
-  isError: false,
-  status: null,
-  response: null,
+const handleAuthAction = async (fn, email, password) => {
+  try {
+    const user = await fn(email, password);
+    return {
+      uid: user.uid,
+      email: user.email,
+      credential: {
+        accessToken: user.accessToken,
+        refreshToken: user.refreshToken,
+      },
+    };
+  } catch (error) {
+    return {
+      code: error.code,
+      message: error.message,
+    };
+  }
 };
 
 export const signUp = createAsyncThunk('auth/signUp', async (_, {getState}) => {
   const {email, password} = getState().auth;
-  try {
-    const user = await authentication.signUp(email, password);
-    return {
-      uid: user.uid,
-      email: user.email,
-      credential: {
-        accessToken: user.accessToken,
-        refreshToken: user.refreshToken,
-      },
-    };
-  } catch (error) {
-    return {
-      code: error.code,
-      message: error.message,
-    };
-  }
+  return handleAuthAction(authentication.signUp, email, password);
 });
 
 export const signIn = createAsyncThunk('auth/signIn', async (_, {getState}) => {
   const {email, password} = getState().auth;
-  try {
-    const user = await authentication.signIn(email, password);
-    return {
-      uid: user.uid,
-      email: user.email,
-      credential: {
-        accessToken: user.accessToken,
-        refreshToken: user.refreshToken,
-      },
-    };
-  } catch (error) {
-    console.log(error);
-    return {
-      code: error.code,
-      message: error.message,
-    };
-  }
+  return handleAuthAction(authentication.signIn, email, password);
 });
+
+// export const signUp = createAsyncThunk('auth/signUp', async (_, {getState}) => {
+//   const {email, password} = getState().auth;
+//   try {
+//     const user = await authentication.signUp(email, password);
+//     return {
+//       uid: user.uid,
+//       email: user.email,
+//       credential: {
+//         accessToken: user.accessToken,
+//         refreshToken: user.refreshToken,
+//       },
+//     };
+//   } catch (error) {
+//     return {
+//       code: error.code,
+//       message: error.message,
+//     };
+//   }
+// });
 
 export const signInWithGoogleThunk = createAsyncThunk(
   'auth/signInWithGoogle',
@@ -110,9 +109,19 @@ export const signOut = createAsyncThunk('auth/signOut', async () => {
 /**
  *
  *------------------------------------------
- *             authSlice
+ *               authSlice
  * -----------------------------------------
  */
+
+const initialState = {
+  email: '',
+  password: '',
+  isLoading: false,
+  isError: false,
+  status: null,
+  response: null,
+};
+
 export const authSlice = createSlice({
   name: 'auth',
   initialState,
