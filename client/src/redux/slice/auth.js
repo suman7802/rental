@@ -107,10 +107,15 @@ export const signOut = createAsyncThunk('auth/signOut', async () => {
   }
 });
 
+/**
+ *
+ *------------------------------------------
+ *             authSlice
+ * -----------------------------------------
+ */
 export const authSlice = createSlice({
   name: 'auth',
   initialState,
-
   reducers: {
     setEmail: (state, action) => {
       state.email = action.payload;
@@ -121,67 +126,72 @@ export const authSlice = createSlice({
   },
 
   extraReducers: (builder) => {
-    builder
-      .addCase(signUp.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(signUp.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.response = action.payload;
-        if (action.payload.code) {
-          state.isError = true;
-          state.status = action.payload.message;
-        } else {
-          state.isError = false;
-          state.status = 'Sign up successful';
-          AccessToken.store(action.payload.credential.accessToken);
-          RefreshToken.store(action.payload.credential.refreshToken);
-        }
-      })
-      .addCase(signUp.rejected, (state) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.status = 'Sign up failed';
-      })
+    builder.addCase(signUp.pending, (state) => {
+      state.isLoading = true;
+    });
 
-      .addCase(signIn.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(signIn.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.response = action.payload;
-        if (action.payload.code) {
-          state.isError = true;
-          state.status = action.payload.message;
-        } else {
-          state.isError = false;
-          state.status = 'Sign in successful';
-          AccessToken.store(action.payload.credential.accessToken);
-          RefreshToken.store(action.payload.credential.refreshToken);
-        }
-      })
-      .addCase(signIn.rejected, (state) => {
-        state.isLoading = false;
+    builder.addCase(signUp.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.response = action.payload;
+      if (action.payload.code) {
         state.isError = true;
-        state.status = 'Sign in failed';
-      })
-
-      .addCase(signOut.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(signOut.fulfilled, (state) => {
-        state.isLoading = false;
+        state.status = action.payload.message;
+      } else {
         state.isError = false;
-        state.status = 'Sign out successful';
-        state.response = null;
-        AccessToken.clear();
-        RefreshToken.clear();
-      })
-      .addCase(signOut.rejected, (state) => {
-        state.isLoading = false;
+        state.status = 'Sign up successful';
+        AccessToken.store(action.payload.credential.accessToken);
+        RefreshToken.store(action.payload.credential.refreshToken);
+      }
+    });
+
+    builder.addCase(signUp.rejected, (state) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.status = 'Sign up failed';
+    });
+
+    builder.addCase(signIn.pending, (state) => {
+      state.isLoading = true;
+    });
+
+    builder.addCase(signIn.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.response = action.payload;
+      if (action.payload.code) {
         state.isError = true;
-        state.status = 'Sign out failed';
-      });
+        state.status = action.payload.message;
+      } else {
+        state.isError = false;
+        state.status = 'Sign in successful';
+        AccessToken.store(action.payload.credential.accessToken);
+        RefreshToken.store(action.payload.credential.refreshToken);
+      }
+    });
+
+    builder.addCase(signIn.rejected, (state) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.status = 'Sign in failed';
+    });
+
+    builder.addCase(signOut.pending, (state) => {
+      state.isLoading = true;
+    });
+
+    builder.addCase(signOut.fulfilled, (state) => {
+      state.isLoading = false;
+      state.isError = false;
+      state.status = 'Sign out successful';
+      state.response = null;
+      AccessToken.clear();
+      RefreshToken.clear();
+    });
+
+    builder.addCase(signOut.rejected, (state) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.status = 'Sign out failed';
+    });
   },
 });
 
