@@ -119,6 +119,9 @@ export const authSlice = createSlice({
       } else {
         state.isError = false;
         state.status = 'Sign up successful';
+
+        console.log(action);
+
         AccessToken.store(action.payload.credential.accessToken);
         RefreshToken.store(action.payload.credential.refreshToken);
       }
@@ -143,6 +146,9 @@ export const authSlice = createSlice({
       } else {
         state.isError = false;
         state.status = 'Sign in successful';
+
+        console.log(action);
+
         AccessToken.store(action.payload.credential.accessToken);
         RefreshToken.store(action.payload.credential.refreshToken);
       }
@@ -180,6 +186,9 @@ export const authSlice = createSlice({
     builder.addCase(google.fulfilled, (state, action) => {
       state.isLoading = false;
       state.response = action.payload;
+
+      console.log(action);
+
       if (action.payload.code) {
         state.isError = true;
         state.status = action.payload.message;
@@ -204,6 +213,9 @@ export const authSlice = createSlice({
     builder.addCase(facebook.fulfilled, (state, action) => {
       state.isLoading = false;
       state.response = action.payload;
+
+      console.log(action);
+
       if (action.payload.code) {
         state.isError = true;
         state.status = action.payload.message;

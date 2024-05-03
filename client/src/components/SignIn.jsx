@@ -1,11 +1,15 @@
+import {useState} from 'react';
 import {Link} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 import {signIn, google, facebook} from '../redux/slice/auth';
 
 import googleSvg from '../assets/google.svg';
 import facebookSvg from '../assets/facebook.svg';
 import {setEmail, setPassword} from '../redux/slice/auth';
+
+import {faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
 
 export default function SignIn() {
   const dispatch = useDispatch();
@@ -16,6 +20,12 @@ export default function SignIn() {
   function handleSubmit(e) {
     e.preventDefault();
     dispatch(signIn());
+  }
+  const [show, setShow] = useState(false);
+
+  function togglePassword(e) {
+    e.preventDefault();
+    setShow((show) => !show);
   }
 
   return (
@@ -35,16 +45,28 @@ export default function SignIn() {
             onChange={(e) => dispatch(setEmail(e.target.value))}
             placeholder="E-mail"
           />
-          <input
-            required
-            className="w-full border-none p-4 rounded-xl mt-4 shadow-md outline-none"
-            type="password"
-            name="password"
-            id="password"
-            value={password}
-            onChange={(e) => dispatch(setPassword(e.target.value))}
-            placeholder="Password"
-          />
+          <div className="relative flex items-center justify-end">
+            <input
+              required
+              className="w-full border-none p-4 rounded-xl mt-4 shadow-md outline-none"
+              type={show ? 'text' : 'password'}
+              name="password"
+              id="password"
+              value={password}
+              onChange={(e) => dispatch(setPassword(e.target.value))}
+              placeholder="Password"
+            />
+            <button
+              onClick={togglePassword}
+              className={`absolute mt-4 mr-4 text-gray-400 text-base`}>
+              {show ? (
+                <FontAwesomeIcon icon={faEye} />
+              ) : (
+                <FontAwesomeIcon icon={faEyeSlash} />
+              )}
+            </button>
+          </div>
+
           <span className="block mt-2 ml-2">
             <a href="#" className="text-xs text-red-400">
               Forgot Password ?

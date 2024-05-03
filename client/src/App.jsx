@@ -6,6 +6,7 @@ import About from './pages/About';
 import Auth from './pages/Auth';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import './services/auth.service'
+import Test from './redux/Test';
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
           <Route path="/auth/*" element={<Auth />} />
+          <Route path="/test" element={<Test />} />
         </Routes>
         <Footer />
       </BrowserRouter>
