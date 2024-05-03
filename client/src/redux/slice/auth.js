@@ -1,18 +1,20 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 
-import AccessToken from '../../utils/AccessToken';
-import RefreshToken from '../../utils/RefreshToken';
+import Token from '../../utils/Token';
 import authentication from '../../services/auth.service';
 import FormatFirebaseError from '../../utils/FormateFirebaseError';
 
 const handleAuthAction = async (fn, email, password) => {
   try {
     const user = await fn(email, password);
+
+    const idToken = await user.getIdToken();
+
     return {
       uid: user.uid,
       email: user.email,
       credential: {
-        accessToken: user.accessToken,
+        idToken,
         refreshToken: user.refreshToken,
       },
     };
@@ -36,14 +38,11 @@ export const signIn = createAsyncThunk('auth/signIn', async (_, {getState}) => {
 
 export const google = createAsyncThunk('auth/google', async () => {
   try {
-    const {user, credential} = await authentication.signInWithGoogle();
-
-    console.log(user, credential);
-
+    const {user} = await authentication.signInWithGoogle();
+    const idToken = await user.getIdToken();
     return {
-      uid: user.uid,
-      email: user.email,
-      credential,
+      idToken,
+      refreshToken: user.refreshToken,
     };
   } catch (error) {
     return {
@@ -55,11 +54,11 @@ export const google = createAsyncThunk('auth/google', async () => {
 
 export const facebook = createAsyncThunk('auth/facebook', async () => {
   try {
-    const {user, credential} = await authentication.signInWithFacebook();
+    const {user} = await authentication.signInWithFacebook();
+    const idToken = await user.getIdToken();
     return {
-      uid: user.uid,
-      email: user.email,
-      credential,
+      idToken,
+      refreshToken: user.refreshToken,
     };
   } catch (error) {
     return {
@@ -124,8 +123,9 @@ export const authSlice = createSlice({
         state.isError = false;
         state.status = 'Sign up successful';
 
-        AccessToken.store(action.payload.credential.accessToken);
-        RefreshToken.store(action.payload.credential.refreshToken);
+        const idToken = action.payload.credential.idToken;
+        const refreshToken = action.payload.credential.refreshToken;
+        Token.store(idToken, refreshToken);
       }
     });
 
@@ -149,8 +149,9 @@ export const authSlice = createSlice({
         state.isError = false;
         state.status = 'Sign in successful';
 
-        AccessToken.store(action.payload.credential.accessToken);
-        RefreshToken.store(action.payload.credential.refreshToken);
+        const idToken = action.payload.credential.idToken;
+        const refreshToken = action.payload.credential.refreshToken;
+        Token.store(idToken, refreshToken);
       }
     });
 
@@ -169,8 +170,7 @@ export const authSlice = createSlice({
       state.isError = false;
       state.status = 'Sign out successful';
       state.response = null;
-      AccessToken.clear();
-      RefreshToken.clear();
+      Token.clear();
     });
 
     builder.addCase(signOut.rejected, (state) => {
@@ -187,16 +187,16 @@ export const authSlice = createSlice({
       state.isLoading = false;
       state.response = action.payload;
 
-      console.log(action);
-
       if (action.payload.code) {
         state.isError = true;
         state.status = FormatFirebaseError(action.payload.message);
       } else {
         state.isError = false;
         state.status = 'Sign in successful';
-        AccessToken.store(action.payload.credential.accessToken);
-        RefreshToken.store(action.payload.credential.refreshToken);
+
+        const idToken = action.payload.idToken;
+        const refreshToken = action.payload.refreshToken;
+        Token.store(idToken, refreshToken);
       }
     });
 
@@ -214,16 +214,16 @@ export const authSlice = createSlice({
       state.isLoading = false;
       state.response = action.payload;
 
-      console.log(action);
-
       if (action.payload.code) {
         state.isError = true;
         state.status = FormatFirebaseError(action.payload.message);
       } else {
         state.isError = false;
         state.status = 'Sign in successful';
-        AccessToken.store(action.payload.credential.accessToken);
-        RefreshToken.store(action.payload.credential.refreshToken);
+
+        const idToken = action.payload.idToken;
+        const refreshToken = action.payload.refreshToken;
+        Token.store(idToken, refreshToken);
       }
     });
 

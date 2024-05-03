@@ -52,8 +52,6 @@ const authentication = {
   signInWithGoogle: async () => {
     return await signInWithPopup(auth, googleProvider)
       .then(async (result) => {
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-
         const pendingCred = StoreRetrievePendingCredential.retrieve();
 
         if (pendingCred) {
@@ -61,7 +59,7 @@ const authentication = {
           StoreRetrievePendingCredential.clear();
         }
 
-        return {credential, user: result.user};
+        return {user: result.user};
       })
       .catch((error) => {
         if (error.code === 'auth/account-exists-with-different-credential') {

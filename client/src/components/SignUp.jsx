@@ -1,11 +1,15 @@
+import {useState} from 'react';
 import {Link} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
 
 import {signUp} from '../redux/slice/auth';
 import {setEmail, setPassword} from '../redux/slice/auth';
 
 export default function SignUp() {
   const dispatch = useDispatch();
+  const [show, setShow] = useState(false);
   const {isLoading, status, isError, email, password} = useSelector(
     (state) => state.auth
   );
@@ -13,6 +17,11 @@ export default function SignUp() {
   function handleSubmit(e) {
     e.preventDefault();
     dispatch(signUp());
+  }
+
+  function togglePassword(e) {
+    e.preventDefault();
+    setShow((show) => !show);
   }
 
   return (
@@ -32,16 +41,28 @@ export default function SignUp() {
             value={email}
             onChange={(e) => dispatch(setEmail(e.target.value))}
           />
-          <input
-            required
-            className="w-full border-none p-4 rounded-xl mt-4 shadow-md outline-none"
-            type="password"
-            name="password"
-            id="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => dispatch(setPassword(e.target.value))}
-          />
+
+          <div className="relative flex items-center justify-end">
+            <input
+              required
+              className="w-full border-none p-4 rounded-xl mt-4 shadow-md outline-none"
+              type={show ? 'text' : 'password'}
+              name="password"
+              id="password"
+              value={password}
+              onChange={(e) => dispatch(setPassword(e.target.value))}
+              placeholder="Password"
+            />
+            <button
+              onClick={togglePassword}
+              className={`absolute mt-4 mr-4 text-gray-400 text-base`}>
+              {show ? (
+                <FontAwesomeIcon icon={faEye} />
+              ) : (
+                <FontAwesomeIcon icon={faEyeSlash} />
+              )}
+            </button>
+          </div>
           <button
             className="block w-full font-bold bg-gradient-to-r from-red-600 to-red-500 text-white py-3 mt-5 rounded-xl shadow-lg transform transition-all hover:scale-105 active:scale-95"
             type="submit"

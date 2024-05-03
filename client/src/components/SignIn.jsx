@@ -2,17 +2,16 @@ import {useState} from 'react';
 import {Link} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-
-import {signIn, google, facebook} from '../redux/slice/auth';
+import {faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
 
 import googleSvg from '../assets/google.svg';
 import facebookSvg from '../assets/facebook.svg';
 import {setEmail, setPassword} from '../redux/slice/auth';
-
-import {faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
+import {signIn, google, facebook} from '../redux/slice/auth';
 
 export default function SignIn() {
   const dispatch = useDispatch();
+  const [show, setShow] = useState(false);
   const {isLoading, isError, status, email, password} = useSelector(
     (state) => state.auth
   );
@@ -21,7 +20,6 @@ export default function SignIn() {
     e.preventDefault();
     dispatch(signIn());
   }
-  const [show, setShow] = useState(false);
 
   function togglePassword(e) {
     e.preventDefault();
