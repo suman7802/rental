@@ -3,6 +3,7 @@ import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import AccessToken from '../../utils/AccessToken';
 import RefreshToken from '../../utils/RefreshToken';
 import authentication from '../../services/auth.service';
+import FormatFirebaseError from '../../utils/FormateFirebaseError';
 
 const handleAuthAction = async (fn, email, password) => {
   try {
@@ -36,6 +37,9 @@ export const signIn = createAsyncThunk('auth/signIn', async (_, {getState}) => {
 export const google = createAsyncThunk('auth/google', async () => {
   try {
     const {user, credential} = await authentication.signInWithGoogle();
+
+    console.log(user, credential);
+
     return {
       uid: user.uid,
       email: user.email,
@@ -115,12 +119,10 @@ export const authSlice = createSlice({
       state.response = action.payload;
       if (action.payload.code) {
         state.isError = true;
-        state.status = action.payload.message;
+        state.status = FormatFirebaseError(action.payload.message);
       } else {
         state.isError = false;
         state.status = 'Sign up successful';
-
-        console.log(action);
 
         AccessToken.store(action.payload.credential.accessToken);
         RefreshToken.store(action.payload.credential.refreshToken);
@@ -142,12 +144,10 @@ export const authSlice = createSlice({
       state.response = action.payload;
       if (action.payload.code) {
         state.isError = true;
-        state.status = action.payload.message;
+        state.status = FormatFirebaseError(action.payload.message);
       } else {
         state.isError = false;
         state.status = 'Sign in successful';
-
-        console.log(action);
 
         AccessToken.store(action.payload.credential.accessToken);
         RefreshToken.store(action.payload.credential.refreshToken);
@@ -191,7 +191,7 @@ export const authSlice = createSlice({
 
       if (action.payload.code) {
         state.isError = true;
-        state.status = action.payload.message;
+        state.status = FormatFirebaseError(action.payload.message);
       } else {
         state.isError = false;
         state.status = 'Sign in successful';
@@ -218,7 +218,7 @@ export const authSlice = createSlice({
 
       if (action.payload.code) {
         state.isError = true;
-        state.status = action.payload.message;
+        state.status = FormatFirebaseError(action.payload.message);
       } else {
         state.isError = false;
         state.status = 'Sign in successful';
