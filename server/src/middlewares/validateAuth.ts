@@ -1,11 +1,21 @@
 import {NextFunction, Request, Response} from 'express';
+import admin from 'firebase-admin';
 
-import auth from '../configs/firebase';
 import asyncCatch from '../errors/catchAsync';
+import firebaseConfig from '../configs/firebase';
+
+admin.initializeApp(firebaseConfig);
 
 const validate = {
   auth: asyncCatch(async (req: Request, res: Response, next: NextFunction) => {
-    const token = req.headers.authorization;
+    const idToken = req.headers.authorization?.split('Bearer ')[1];
+    admin
+      .auth()
+      .verifyIdToken(idToken!)
+      .then((decodedToken) => {
+        res.locals.user = decodedToken;
+        next();
+      });
   }),
 };
 

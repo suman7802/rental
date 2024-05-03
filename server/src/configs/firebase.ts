@@ -1,6 +1,3 @@
-import {getAuth} from 'firebase/auth';
-import {initializeApp} from 'firebase/app';
-
 import {
   FIREBASE_API_KEY,
   FIREBASE_AUTH_DOMAIN,
@@ -21,10 +18,4 @@ const firebaseConfig = {
   measurementId: FIREBASE_MEASUREMENT_ID,
 };
 
-const app = initializeApp(firebaseConfig);
-
-const auth = getAuth(app);
-auth.useDeviceLanguage();
-
-
-export default auth;
+export default firebaseConfig;

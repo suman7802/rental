@@ -7,9 +7,7 @@ import FormatFirebaseError from '../../utils/FormateFirebaseError';
 const handleAuthAction = async (fn, email, password) => {
   try {
     const user = await fn(email, password);
-
     const idToken = await user.getIdToken();
-
     return {
       uid: user.uid,
       email: user.email,
@@ -83,7 +81,7 @@ export const signOut = createAsyncThunk('auth/signOut', async () => {
 /**
  *
  *------------------------------------------
- *               authSlice
+ *               Auth Slice
  * -----------------------------------------
  */
 
