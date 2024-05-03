@@ -7,7 +7,7 @@ import CustomError from '../errors/customError';
 const user = {
   getUser: asyncCatch(
     async (req: Request, res: Response, next: NextFunction) => {
-      const user = req.user;
+      const user = res.locals.user;
 
       // const fetchUser = await prisma.user.findUnique({
       //   where: {uid: user?.uid},
