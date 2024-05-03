@@ -6,7 +6,9 @@ const AccessToken = {
   },
 
   retrieve: () => {
-    return JSON.parse(localStorage.getItem(AccessTokenName));
+    const AccessToken = localStorage.getItem(AccessTokenName);
+    if (!AccessToken) return null;
+    return JSON.parse(AccessToken);
   },
 
   clear: () => {
