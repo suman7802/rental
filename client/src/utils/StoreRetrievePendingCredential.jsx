@@ -6,9 +6,13 @@ const StoreRetrievePendingCredential = {
   },
 
   retrieve: () => {
-    return GoogleAuthProvider.credential(
-      JSON.parse(localStorage.getItem('pendingCredential'))
-    );
+    const storedCred = JSON.parse(localStorage.getItem('pendingCredential'));
+    if (storedCred) {
+      return GoogleAuthProvider.credential(
+        storedCred.idToken,
+        storedCred.accessToken
+      );
+    }
   },
 
   clear: () => {

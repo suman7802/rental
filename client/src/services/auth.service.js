@@ -33,18 +33,18 @@ const authentication = {
       .then(async (userCredential) => {
         const pendingCred = StoreRetrievePendingCredential.retrieve();
 
-        if (pendingCred !== null) {
-          await linkWithCredential(userCredential.user, pendingCred).then(
-            () => {
-              StoreRetrievePendingCredential.clear();
-              console.log('Link successful and pending credential cleared');
-            }
-          );
+        if (pendingCred) {
+          await linkWithCredential(userCredential.user, pendingCred);
+          StoreRetrievePendingCredential.clear();
         }
 
         return userCredential.user;
       })
       .catch((error) => {
+        if (error.code === 'auth/account-exists-with-different-credential') {
+          const credential = GoogleAuthProvider.credentialFromError(error);
+          StoreRetrievePendingCredential.store(credential);
+        }
         throw error;
       });
   },
@@ -56,11 +56,9 @@ const authentication = {
 
         const pendingCred = StoreRetrievePendingCredential.retrieve();
 
-        if (pendingCred !== null) {
-          await linkWithCredential(result.user, pendingCred).then(() => {
-            StoreRetrievePendingCredential.clear();
-            console.log('Link successful and pending credential cleared');
-          });
+        if (pendingCred) {
+          await linkWithCredential(result.user, pendingCred);
+          StoreRetrievePendingCredential.clear();
         }
 
         return {credential, user: result.user};
@@ -81,11 +79,9 @@ const authentication = {
 
         const pendingCred = StoreRetrievePendingCredential.retrieve();
 
-        if (pendingCred !== null) {
-          await linkWithCredential(result.user, pendingCred).then(() => {
-            StoreRetrievePendingCredential.clear();
-            console.log('Link successful and pending credential cleared');
-          });
+        if (pendingCred) {
+          await linkWithCredential(result.user, pendingCred);
+          StoreRetrievePendingCredential.clear();
         }
 
         return {accessToken: credential.accessToken, user: result.user};
