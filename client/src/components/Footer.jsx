@@ -1,10 +1,12 @@
-import SocialButton from './SocialButton';
 import {
   faFacebookF,
   faInstagram,
   faLinkedinIn,
 } from '@fortawesome/free-brands-svg-icons';
 import {Link} from 'react-router-dom';
+
+import logo from '../assets/Rental.png';
+import SocialButton from './SocialButton';
 
 const socialButtons = [
   {
@@ -37,7 +39,9 @@ export default function Footer() {
   return (
     <footer className="bg-gray-300 p-5 flex flex-col gap-10 w-screen md:flex-row justify-around">
       <div className="logo flex flex-col gap-5 items-start justify-center lg:w-[20%]">
-        <div className="ActualLogo font-bold text-4xl">Logo</div>
+        <Link to="/" className="font-bold text-[4vh] cursor-pointer">
+          <img src={logo} alt="Logo" className="h-12" />
+        </Link>
         <span className="font-thin text-base leading-6">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis
           suscipit sit earum.

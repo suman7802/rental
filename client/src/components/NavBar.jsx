@@ -3,6 +3,7 @@ import {useState, useEffect} from 'react';
 import PopUpNav from './PopUpNav';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faBars, faPlus, faUser} from '@fortawesome/free-solid-svg-icons';
+import logo from '../assets/Rental.png';
 
 export default function NavBar() {
   const [show, setShow] = useState(false);
@@ -25,7 +26,7 @@ export default function NavBar() {
     <>
       <nav className="flex flex-row items-center justify-between p-5">
         <Link to="/" className="font-bold text-[4vh] cursor-pointer">
-          Logo
+          <img src={logo} alt="Logo" className="h-12" />
         </Link>
 
         <div className="hidden lg:flex flex-row gap-9 items-center justify-between">
