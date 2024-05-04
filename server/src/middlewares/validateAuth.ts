@@ -1,12 +1,9 @@
 import jwt from 'jsonwebtoken';
-import admin from 'firebase-admin';
 import {NextFunction, Request, Response} from 'express';
 
 import asyncCatch from '../errors/catchAsync';
-import firebaseConfig from '../configs/firebase';
 import CustomError from '../errors/customError';
-
-admin.initializeApp(firebaseConfig);
+import admin from '../configs/firebase';
 
 const validate = {
   auth: asyncCatch(async (req: Request, res: Response, next: NextFunction) => {
