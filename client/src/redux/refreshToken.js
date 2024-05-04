@@ -1,6 +1,6 @@
 import Token from '../utils/Token';
-import AxiosInstance from './AxiosInstance';
 import auth from '../configs/firebase';
+import AxiosInstance from './AxiosInstance';
 
 export default async function refreshUidAndRetry(error) {
   const user = auth.currentUser;
