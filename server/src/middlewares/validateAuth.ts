@@ -11,7 +11,7 @@ admin.initializeApp(firebaseConfig);
 const validate = {
   auth: asyncCatch(async (req: Request, res: Response, next: NextFunction) => {
     const idToken = req.headers.authorization?.split('Bearer ')[1];
-    
+
     const decodedToken = jwt.decode(idToken!) as {exp: number};
     const currentTimeInSeconds = Math.floor(Date.now() / 1000);
 

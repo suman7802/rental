@@ -2,7 +2,9 @@ const TokenName = 'Rental';
 
 const Token = {
   store: (idToken, refreshToken) => {
+    if(idToken)
     localStorage.setItem(`${TokenName}IdToken`, JSON.stringify(idToken));
+    if(refreshToken)
     document.cookie = `${TokenName}RefreshToken=${JSON.stringify(refreshToken)}; path=/`;
   },
   

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import Token from '../utils/Token';
+import refreshUidAndRetry from './refreshToken';
 
 const AxiosInstance = axios.create({
   baseURL: 'http://localhost:8000/api',
@@ -14,8 +15,13 @@ AxiosInstance.interceptors.request.use((config) => {
 });
 
 AxiosInstance.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    return response;
+  },
   (error) => {
+    if (error.response && error.response.data.message === 'Token expired')
+      return refreshUidAndRetry(error);
+
     return Promise.reject(
       error.response.data.message || error.message || error
     );
