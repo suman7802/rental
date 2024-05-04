@@ -15,16 +15,11 @@ AxiosInstance.interceptors.request.use((config) => {
 });
 
 AxiosInstance.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  (response) => response,
   (error) => {
     if (error.response && error.response.data.message === 'Token expired')
       return refreshUidAndRetry(error);
-
-    return Promise.reject(
-      error.response.data.message || error.message || error
-    );
+    return Promise.reject(error.response.data.message || error.message || error);
   }
 );
 
