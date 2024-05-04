@@ -4,6 +4,7 @@ import {
   GoogleAuthProvider,
   linkWithCredential,
   FacebookAuthProvider,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from 'firebase/auth';
@@ -45,6 +46,16 @@ const authentication = {
           const credential = GoogleAuthProvider.credentialFromError(error);
           StoreRetrievePendingCredential.store(credential);
         }
+        throw error;
+      });
+  },
+
+  resetPassword: async (email) => {
+    return await sendPasswordResetEmail(auth, email)
+      .then(() => {
+        return true;
+      })
+      .catch((error) => {
         throw error;
       });
   },

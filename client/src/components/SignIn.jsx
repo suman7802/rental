@@ -66,9 +66,9 @@ export default function SignIn() {
           </div>
 
           <span className="block mt-2 ml-2">
-            <a href="#" className="text-xs text-red-400">
+            <Link to="/auth/reset" className="text-xs text-red-400">
               Forgot Password ?
-            </a>
+            </Link>
           </span>
 
           <button

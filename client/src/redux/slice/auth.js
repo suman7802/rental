@@ -24,7 +24,7 @@ const handleAuthAction = async (fn, email, password) => {
   }
 };
 
-export const signUp = createAsyncThunk('auth/signUp', async (_, {getState}) => {
+export const signUp = createAsyncThunk('auth/signUp', async (getState) => {
   const {email, password} = getState().auth;
   return handleAuthAction(authentication.signUp, email, password);
 });
@@ -32,6 +32,19 @@ export const signUp = createAsyncThunk('auth/signUp', async (_, {getState}) => {
 export const signIn = createAsyncThunk('auth/signIn', async (_, {getState}) => {
   const {email, password} = getState().auth;
   return handleAuthAction(authentication.signIn, email, password);
+});
+
+export const reset = createAsyncThunk('auth/reset', async (_, {getState}) => {
+  const {email} = getState().auth;
+  try {
+    const result = await authentication.resetPassword(email);
+    return result;
+  } catch (error) {
+    return {
+      code: error.code,
+      message: error.message,
+    };
+  }
 });
 
 export const google = createAsyncThunk('auth/google', async () => {
@@ -157,6 +170,28 @@ export const authSlice = createSlice({
       state.isLoading = false;
       state.isError = true;
       state.status = 'Sign in failed';
+    });
+
+    builder.addCase(reset.pending, (state) => {
+      state.isLoading = true;
+    });
+
+    builder.addCase(reset.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.response = action.payload;
+      if (action.payload.code) {
+        state.isError = true;
+        state.status = FormatFirebaseError(action.payload.message);
+      } else {
+        state.isError = false;
+        state.status = 'Reset email sent';
+      }
+    });
+
+    builder.addCase(reset.rejected, (state) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.status = 'Failed to send reset email';
     });
 
     builder.addCase(signOut.pending, (state) => {
