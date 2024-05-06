@@ -4,20 +4,14 @@ import prisma from '../models/db.model';
 import asyncCatch from '../errors/catchAsync';
 import CustomError from '../errors/customError';
 
+import createOrGetUser from '../utils/createOrGetUser';
+
 const user = {
-  getUser: asyncCatch(
+  createOrGet: asyncCatch(
     async (req: Request, res: Response, next: NextFunction) => {
       const user = res.locals.user;
-
-      // const fetchUser = await prisma.user.findUnique({
-      //   where: {uid: user?.uid},
-      // });
-
-      // if (!fetchUser) throw new CustomError('User not found', 404);
-      // res.status(200).json(fetchUser);
-
-      console.log(user);
-      res.status(200).json(user);
+      const fetchedUser = await createOrGetUser(user);
+      res.status(200).json(fetchedUser);
     }
   ),
 };

@@ -7,6 +7,6 @@ const authRoute = express.Router();
 
 authRoute.use(validate.auth);
 
-authRoute.get('/getprofile', user.getUser);
+authRoute.get('/getprofile', user.createOrGet);
 
 export default authRoute;
