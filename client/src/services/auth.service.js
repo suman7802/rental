@@ -45,6 +45,10 @@ const authentication = {
           const credential = GoogleAuthProvider.credentialFromError(error);
           StoreRetrievePendingCredential.store(credential);
         }
+
+        if (error.code === 'auth/provider-already-linked')
+          StoreRetrievePendingCredential.clear();
+
         throw error;
       });
   },
@@ -74,6 +78,10 @@ const authentication = {
           const credential = GoogleAuthProvider.credentialFromError(error);
           StoreRetrievePendingCredential.store(credential);
         }
+
+        if (error.code === 'auth/provider-already-linked')
+          StoreRetrievePendingCredential.clear();
+
         throw error;
       });
   },
@@ -95,6 +103,10 @@ const authentication = {
           const credential = FacebookAuthProvider.credentialFromError(error);
           StoreRetrievePendingCredential.store(credential);
         }
+
+        if (error.code === 'auth/provider-already-linked')
+          StoreRetrievePendingCredential.clear();
+
         throw error;
       });
   },

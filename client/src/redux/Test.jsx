@@ -1,15 +1,14 @@
-import AxiosInstance from './AxiosInstance';
-
-export const getProfile = async () => {
-  try {
-    const response = await AxiosInstance.get('/auth/getprofile');
-    return response.data;
-  } catch (error) {
-    return error;
-  }
-};
+import {useDispatch} from 'react-redux';
+import {fetchProfile} from './slice/auth';
 
 export default function Test() {
+  const dispatch = useDispatch();
+
+  const getProfile = async (e) => {
+    e.preventDefault();
+    dispatch(fetchProfile());
+  };
+
   return (
     <div>
       <h1>Test</h1>
