@@ -97,7 +97,7 @@ export const fetchProfile = createAsyncThunk(
   async (_, {rejectWithValue}) => {
     try {
       const response = await AxiosInstance.get('/auth/getprofile');
-      return response.data;
+      return {user: {...response.data}};
     } catch (err) {
       return rejectWithValue(err.response.data);
     }

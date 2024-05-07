@@ -1,11 +1,15 @@
-import {Link, useLocation} from 'react-router-dom';
-import {useState, useEffect} from 'react';
 import PopUpNav from './PopUpNav';
+import {useSelector} from 'react-redux';
+import {useState, useEffect} from 'react';
+import {Link, useLocation} from 'react-router-dom';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faBars, faPlus, faUser} from '@fortawesome/free-solid-svg-icons';
+
 import logo from '../assets/Rental.png';
 
 export default function NavBar() {
+  const {response} = useSelector((state) => state.auth);
+
   const [show, setShow] = useState(false);
   const location = useLocation();
 
@@ -65,14 +69,25 @@ export default function NavBar() {
             className="h-6 lg:hidden"
             onClick={togglePopUpNav}
           />
+
+          {!response ? (
+            <Link
+              to="/auth"
+              className="user hidden lg:flex flex-row items-center justify-between gap-3 text-red-500 hover:text-red-600 transition-colors duration-200 cursor-pointer">
+              <FontAwesomeIcon icon={faUser} className="" />
+              &nbsp;Sign in
+            </Link>
+          ) : (
+            <Link
+              to="/profile"
+              className="user hidden lg:flex flex-row items-center justify-between gap-3 text-red-500 hover:text-red-600 transition-colors duration-200 cursor-pointer">
+              <FontAwesomeIcon icon={faUser} className="" />
+              &nbsp;Profile
+            </Link>
+          )}
+
           <Link
-            to="/auth"
-            className="user hidden lg:flex flex-row items-center justify-between gap-3 text-red-500 hover:text-red-600 transition-colors duration-200 cursor-pointer">
-            <FontAwesomeIcon icon={faUser} className="" />
-            &nbsp;Sign in
-          </Link>
-          <Link
-            to="/post-listing"
+            to={response ? '/postlisting' : '/auth'}
             className="bg-red-500 hover:bg-red-600 transition-colors duration-200 text-white py-2 px-4 rounded-[5vh] cursor-pointer">
             <FontAwesomeIcon icon={faPlus} />
             &nbsp;Post Listing
