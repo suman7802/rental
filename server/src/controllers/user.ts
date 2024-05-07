@@ -81,7 +81,7 @@ const user = {
       if (user?.verified === 'verified')
         throw new CustomError(`Forbidden due to kwc approved`, 403);
 
-      const { bio, phone, name,latitude,longitude } = req.body;
+      const {bio, phone, name, latitude, longitude} = req.body;
 
       let updateData: any = {
         bio: bio ?? user.bio,
@@ -90,8 +90,12 @@ const user = {
       };
 
       if (latitude || longitude) {
-        updateData.latitude = req.body.latitude ? convertStringToFloat(req.body.latitude) : user.latitude;
-        updateData.longitude = req.body.longitude ? convertStringToFloat(req.body.longitude) : user.longitude;
+        updateData.latitude = req.body.latitude
+          ? convertStringToFloat(req.body.latitude)
+          : user.latitude;
+        updateData.longitude = req.body.longitude
+          ? convertStringToFloat(req.body.longitude)
+          : user.longitude;
       }
 
       if (req.file)
@@ -116,27 +120,21 @@ const user = {
 
   addRemoveFavorite: asyncCatch(
     async (req: Request, res: Response, next: NextFunction) => {
-      const {id} = res.locals.user;
+      const {uid} = res.locals.user;
+      const business = req.params.id;
 
-      const businessId = Number(req.params.id);
-      if (isNaN(businessId)) throw new Error('Invalid business id');
-
-      const businessExists = await prisma.user.findUnique({
-        where: {id: businessId},
-      });
+      const businessExists = await prisma.user.findUnique({where: {id: Number(business)}});
       if (!businessExists) throw new Error('Business does not exist');
 
-      const favoriteExists = await prisma.favorite.findFirst({
-        where: {userId: id, businessId},
-      });
+      const favoriteExists = await prisma.favorite.findFirst({where: {userId: uid, businessId: businessExists.uid}});
 
       if (favoriteExists) {
-        await prisma.favorite.delete({
-          where: {id: favoriteExists.id, userId: id, businessId},
-        });
+        await prisma.favorite.delete({where: {id: favoriteExists.id}});
         res.status(200).send('Favorite removed');
-      } else {
-        await prisma.favorite.create({data: {userId: id, businessId}});
+      }
+      
+      else {
+        await prisma.favorite.create({data: {userId: uid, businessId: businessExists.uid}});
         res.status(201).send('Favorite added');
       }
     }

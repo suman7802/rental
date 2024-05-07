@@ -29,10 +29,10 @@ model User {
 
 model Favorite {
   id         Int      @id @default(autoincrement())
-  user       User     @relation("userFavorites", fields: [userId], references: [id])
-  userId     Int
-  business   User     @relation("FavoritesByUser", fields: [businessId], references: [id])
-  businessId Int
+  user       User     @relation("userFavorites", fields: [userId], references: [uid])
+  userId     String
+  business   User     @relation("FavoritesByUser", fields: [businessId], references: [uid])
+  businessId String
   createdAt  DateTime @default(now())
 }
 
