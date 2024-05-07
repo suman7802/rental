@@ -7,7 +7,7 @@ import {faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
 import googleSvg from '../assets/google.svg';
 import facebookSvg from '../assets/facebook.svg';
 import {setEmail, setPassword} from '../redux/slice/auth';
-import {signIn, google, facebook} from '../redux/slice/auth';
+import {signIn, google, facebook, fetchProfile} from '../redux/slice/auth';
 
 export default function SignIn() {
   const dispatch = useDispatch();
@@ -16,14 +16,24 @@ export default function SignIn() {
     (state) => state.auth
   );
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    dispatch(signIn());
-  }
-
   function togglePassword(e) {
     e.preventDefault();
     setShow((show) => !show);
+  }
+
+  function handleLogIn(e) {
+    e.preventDefault();
+    dispatch(signIn()).then(() => dispatch(fetchProfile()));
+  }
+
+  function handleGoogle(e) {
+    e.preventDefault();
+    dispatch(google()).then(() => dispatch(fetchProfile()));
+  }
+
+  function handleFacebook(e) {
+    e.preventDefault();
+    dispatch(facebook()).then(() => dispatch(fetchProfile()));
   }
 
   return (
@@ -32,7 +42,7 @@ export default function SignIn() {
         <div className="text-center font-black text-3xl text-red-600">
           Welcome back
         </div>
-        <form onSubmit={handleSubmit} className="mt-5">
+        <form onSubmit={handleLogIn} className="mt-5">
           <input
             required
             className="w-full border-none p-4 rounded-xl mt-4 shadow-md outline-none"
@@ -97,12 +107,12 @@ export default function SignIn() {
           </span>
           <div className="flex justify-center gap-5 mt-4">
             <button
-              onClick={() => dispatch(google())}
+              onClick={handleGoogle}
               className="p-2 rounded-full w-10 h-10 grid place-content-center shadow-md transform transition-all hover:scale-120 active:scale-90 hover:scale-125">
               <img src={googleSvg} alt="google" />
             </button>
             <button
-              onClick={() => dispatch(facebook())}
+              onClick={handleFacebook}
               className="p-2 rounded-full w-10 h-10 grid place-content-center shadow-md transform transition-all hover:scale-120 active:scale-90 hover:scale-125">
               <img src={facebookSvg} alt="facebook" />
             </button>
