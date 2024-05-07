@@ -1,17 +1,24 @@
+import gsap from 'gsap';
+import {useRef} from 'react';
+import {useGSAP} from '@gsap/react';
 import PopUpNav from './PopUpNav';
 import {useSelector} from 'react-redux';
 import {useState, useEffect} from 'react';
+import {ScrollTrigger} from 'gsap/ScrollTrigger';
 import {Link, useLocation} from 'react-router-dom';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faBars, faPlus, faUser} from '@fortawesome/free-solid-svg-icons';
 
 import logo from '../assets/Rental.png';
 
-export default function NavBar() {
-  const {response} = useSelector((state) => state.auth);
+gsap.registerPlugin(useGSAP);
+gsap.registerPlugin(ScrollTrigger);
 
-  const [show, setShow] = useState(false);
+export default function NavBar() {
+  const {response, isLoading} = useSelector((state) => state.auth);
+
   const location = useLocation();
+  const [show, setShow] = useState(false);
 
   const togglePopUpNav = (event) => {
     event.stopPropagation();
@@ -26,9 +33,30 @@ export default function NavBar() {
     return () => document.removeEventListener('click', hidePopUpNav);
   }, [show]);
 
+  const animatedNav = useRef();
+
+  useEffect(() => {
+    const trigger = ScrollTrigger.create({
+      start: 'top top',
+      end: 'bottom top',
+      onUpdate: (self) => {
+        const {direction} = self;
+        if (direction === 1)
+          gsap.to(animatedNav.current, {y: '-100%', duration: 0.5});
+        else gsap.to(animatedNav.current, {y: '0%', duration: 0.5});
+      },
+    });
+
+    return () => {
+      if (trigger) trigger.kill();
+    };
+  }, []);
+
   return (
     <>
-      <nav className="flex flex-row items-center justify-between p-5">
+      <nav
+        ref={animatedNav}
+        className="fixed bg-[#ffffff50] backdrop-blur-sm z-50 w-full flex flex-row items-center justify-between p-5">
         <Link to="/" className="font-bold text-[4vh] cursor-pointer">
           <img src={logo} alt="Logo" className="h-12" />
         </Link>
@@ -70,7 +98,7 @@ export default function NavBar() {
             onClick={togglePopUpNav}
           />
 
-          {!response ? (
+          {!isLoading && !response ? (
             <Link
               to="/auth"
               className="user hidden lg:flex flex-row items-center justify-between gap-3 text-red-500 hover:text-red-600 transition-colors duration-200 cursor-pointer">
@@ -87,7 +115,7 @@ export default function NavBar() {
           )}
 
           <Link
-            to={response ? '/postlisting' : '/auth'}
+            to={!isLoading && response ? '/postlisting' : '/auth'}
             className="bg-red-500 hover:bg-red-600 transition-colors duration-200 text-white py-2 px-4 rounded-[5vh] cursor-pointer">
             <FontAwesomeIcon icon={faPlus} />
             &nbsp;Post Listing

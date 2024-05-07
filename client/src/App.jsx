@@ -11,6 +11,7 @@ import About from './pages/About';
 import Contact from './pages/Contact';
 import Footer from './components/Footer';
 import NavBar from './components/NavBar';
+import Profile from './pages/Profile';
 
 export default function App() {
   const dispatch = useDispatch();
@@ -28,6 +29,7 @@ export default function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
           <Route path="/auth/*" element={<Auth />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/test" element={<Test />} />
         </Routes>
         <Footer />
