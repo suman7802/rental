@@ -25,7 +25,7 @@ const handleAuthAction = async (fn, email, password) => {
   }
 };
 
-export const signUp = createAsyncThunk('auth/signUp', async (getState) => {
+export const signUp = createAsyncThunk('auth/signUp', async (_, {getState}) => {
   const {email, password} = getState().auth;
   return handleAuthAction(authentication.signUp, email, password);
 });

@@ -34,10 +34,9 @@ const authentication = {
       .then(async (userCredential) => {
         const pendingCred = StoreRetrievePendingCredential.retrieve();
 
-        if (pendingCred) {
+        if (pendingCred)
           await linkWithCredential(userCredential.user, pendingCred);
-          StoreRetrievePendingCredential.clear();
-        }
+        StoreRetrievePendingCredential.clear();
 
         return userCredential.user;
       })
@@ -65,10 +64,8 @@ const authentication = {
       .then(async (result) => {
         const pendingCred = StoreRetrievePendingCredential.retrieve();
 
-        if (pendingCred) {
-          await linkWithCredential(result.user, pendingCred);
-          StoreRetrievePendingCredential.clear();
-        }
+        if (pendingCred) await linkWithCredential(result.user, pendingCred);
+        StoreRetrievePendingCredential.clear();
 
         return {user: result.user};
       })
@@ -88,10 +85,8 @@ const authentication = {
 
         const pendingCred = StoreRetrievePendingCredential.retrieve();
 
-        if (pendingCred) {
-          await linkWithCredential(result.user, pendingCred);
-          StoreRetrievePendingCredential.clear();
-        }
+        if (pendingCred) await linkWithCredential(result.user, pendingCred);
+        StoreRetrievePendingCredential.clear();
 
         return {accessToken: credential.accessToken, user: result.user};
       })
