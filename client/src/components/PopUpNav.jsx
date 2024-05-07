@@ -1,6 +1,9 @@
 import {Link} from 'react-router-dom';
+import {useSelector} from 'react-redux';
 
 export default function PopUpNav() {
+  const {response} = useSelector((state) => state.auth);
+
   return (
     <div className="popup-nav z-10 absolute inset-x-0 flex flex-col gap-5 py-5 justify-center items-center text-white bg-red-500 rounded-b-xl lg:hidden">
       <Link to="/" className={`${location.pathname === '/' && 'text-black'}`}>
@@ -26,10 +29,11 @@ export default function PopUpNav() {
         className={`${location.pathname === '/contact' && 'text-black'}`}>
         Contact
       </Link>
+
       <Link
-        to="/auth"
+        to={response ? '/postlisting' : '/auth'}
         className={`${location.pathname === '/auth' && 'text-black'}`}>
-        Sign In
+        {response ? 'Profile' : 'Sign In'}
       </Link>
     </div>
   );

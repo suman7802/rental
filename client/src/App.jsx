@@ -1,14 +1,24 @@
+import {useEffect} from 'react';
+import {useDispatch} from 'react-redux';
+import {fetchProfile} from './redux/slice/auth';
+import {BrowserRouter, Routes, Route} from 'react-router-dom';
+
+import Home from './home/Index';
+import Test from './redux/Test';
+import Auth from './pages/Auth';
+import './services/auth.service';
+import About from './pages/About';
+import Contact from './pages/Contact';
 import Footer from './components/Footer';
 import NavBar from './components/NavBar';
-import Home from './home/Index';
-import Contact from './pages/Contact';
-import About from './pages/About';
-import Auth from './pages/Auth';
-import {BrowserRouter, Routes, Route} from 'react-router-dom';
-import './services/auth.service'
-import Test from './redux/Test';
 
 export default function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchProfile());
+  });
+
   return (
     <div className="relative text-lg xl:text-xl 2xl:text-2xl">
       <BrowserRouter>
