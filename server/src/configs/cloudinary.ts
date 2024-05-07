@@ -13,12 +13,12 @@ cloudinary.config({
 });
 
 // category: 'media' or 'profile'
-export  default function uploadMedia(files: any, uid: string, category: string, title = 'profile') {
+export  default function uploadMedia(files: any, uid: string, category: string) {
   return files.map(async (file: any) => {
     return await cloudinary.uploader.upload(file.tempFilePath, {
       resource_type: file.mimetype === 'video/mp4' ? 'video' : 'image',
       folder: `rental/${category}`,
-      public_id: `${title}${uid}}`,
+      public_id: `${uid}}`,
     });
   });
 }

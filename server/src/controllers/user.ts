@@ -139,6 +139,50 @@ const user = {
       }
     }
   ),
+
+  verify: asyncCatch(async (req: Request, res: Response) => {
+    const {id} = res.locals.user;
+
+    if (!req.file || Object.keys(req.file).length === 0)
+      throw new CustomError(`GovID Not Found`, 404);
+
+    const verified = await prisma.user.findUnique({where: {id}});
+
+    if (verified?.verified === 'verified')
+      throw new CustomError(`Already Verified`, 400);
+
+    let govIdUrl;
+    if (req.file) govIdUrl = await uploadMedia(req.file, id, 'govId');
+
+    const updatedModel = await prisma.user.update({
+      where: {id},
+      data: {govId: govIdUrl},
+    });
+
+    const requiredFields = [
+      'name',
+      'email',
+      'govId',
+      'phone',
+      'profile',
+      'latitude',
+      'longitude',
+    ];
+
+    const missingFields = requiredFields.filter(
+      (field) => !updatedModel[field as keyof typeof updatedModel]
+    );
+
+    if (missingFields.length > 0)
+      throw new CustomError(`Missing Fields: ${missingFields.join(', ')}`, 400);
+
+    await prisma.user.update({
+      where: {id},
+      data: {verified: 'requested'},
+    });
+
+    res.status(202).send('Verification Requested');
+  }),
 };
 
 export default user;
