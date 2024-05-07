@@ -3,6 +3,7 @@ import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import Token from '../../utils/Token';
 import authentication from '../../services/auth.service';
 import FormatFirebaseError from '../../utils/FormateFirebaseError';
+import AxiosInstance from '../AxiosInstance';
 
 const handleAuthAction = async (fn, email, password) => {
   try {
@@ -90,6 +91,18 @@ export const signOut = createAsyncThunk('auth/signOut', async () => {
     };
   }
 });
+
+export const fetchProfile = createAsyncThunk(
+  'auth/fetchProfile',
+  async (_, {rejectWithValue}) => {
+    try {
+      const response = await AxiosInstance.get('/auth/getprofile');
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
 
 /**
  *
@@ -264,6 +277,22 @@ export const authSlice = createSlice({
       state.isLoading = false;
       state.isError = true;
       state.status = 'Sign in failed';
+    });
+
+    builder.addCase(fetchProfile.pending, (state) => {
+      state.isLoading = true;
+    });
+
+    builder.addCase(fetchProfile.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.isError = false;
+      state.response = action.payload;
+    });
+
+    builder.addCase(fetchProfile.rejected, (state) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.status = 'Failed to fetch profile';
     });
   },
 });
