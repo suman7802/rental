@@ -11,13 +11,14 @@ export default async function createOrGetUser(user: any) {
   if (!fetchUser) {
     const newUser = await prisma.user.create({
       data: {
-        uid: user?.uid,
-        name: user?.name,
+        uid: user.uid,
         email: user?.email,
         picture: user?.picture,
         verified: user?.email_verified,
+        name: user?.name?.toLowerCase(),
       },
     });
+
     return newUser;
   }
   return fetchUser;
