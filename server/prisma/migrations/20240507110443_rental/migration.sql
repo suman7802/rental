@@ -1,23 +1,25 @@
 -- CreateEnum
 CREATE TYPE "rentalType" AS ENUM ('ride', 'thing', 'place');
 
+-- CreateEnum
+CREATE TYPE "VerifiedStatus" AS ENUM ('notVerified', 'requested', 'rejected', 'verified');
+
 -- CreateTable
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
     "uid" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "name" TEXT,
-    "picture" TEXT,
-    "verified" BOOLEAN NOT NULL DEFAULT false,
+    "profile" TEXT,
+    "verified" "VerifiedStatus" NOT NULL DEFAULT 'notVerified',
     "phone" TEXT,
     "latitude" DOUBLE PRECISION,
     "longitude" DOUBLE PRECISION,
     "FCMToken" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "description" TEXT,
+    "bio" TEXT,
     "govId" TEXT,
-    "govId2" TEXT,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -37,7 +39,6 @@ CREATE TABLE "Unit" (
     "id" SERIAL NOT NULL,
     "user" INTEGER NOT NULL,
     "name" TEXT NOT NULL,
-    "location" TEXT NOT NULL,
     "latitude" DOUBLE PRECISION,
     "longitude" DOUBLE PRECISION,
     "rent" DOUBLE PRECISION NOT NULL,

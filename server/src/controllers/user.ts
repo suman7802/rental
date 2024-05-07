@@ -31,7 +31,39 @@ const user = {
       if (!isNaN(id)) whereClause.id = id;
       if (name) whereClause.name = {contains: name, mode: 'insensitive'};
 
-      const fetchedUser = await prisma.user.findFirst({where: whereClause});
+      const fetchedUser = await prisma.user.findFirst({
+        where: whereClause,
+        select: {
+          bio: true,
+          name: true,
+          email: true,
+          phone: true,
+          profile: true,
+          verified: true,
+
+          Unit: {
+            select: {
+              id: true,
+              name: true,
+              Image: true,
+              type: true,
+            },
+          },
+
+          Favorites: {
+            select: {
+              business: {
+                select: {
+                  id: true,
+                  name: true,
+                  profile: true,
+                  verified: true,
+                },
+              },
+            },
+          },
+        },
+      });
       if (!fetchedUser) return next(new CustomError('User not found', 404));
 
       res.status(200).json(fetchedUser);
@@ -70,7 +102,6 @@ const user = {
           bio: true,
           name: true,
           email: true,
-          govId: true,
           phone: true,
           profile: true,
           verified: true,
@@ -78,6 +109,34 @@ const user = {
       });
 
       res.status(200).json(updatedUser);
+    }
+  ),
+
+  addRemoveFavorite: asyncCatch(
+    async (req: Request, res: Response, next: NextFunction) => {
+      const {id} = res.locals.user;
+
+      const businessId = Number(req.params.id);
+      if (isNaN(businessId)) throw new Error('Invalid business id');
+
+      const businessExists = await prisma.user.findUnique({
+        where: {id: businessId},
+      });
+      if (!businessExists) throw new Error('Business does not exist');
+
+      const favoriteExists = await prisma.favorite.findFirst({
+        where: {userId: id, businessId},
+      });
+
+      if (favoriteExists) {
+        await prisma.favorite.delete({
+          where: {id: favoriteExists.id, userId: id, businessId},
+        });
+        res.status(200).send('Favorite removed');
+      } else {
+        await prisma.favorite.create({data: {userId: id, businessId}});
+        res.status(201).send('Favorite added');
+      }
     }
   ),
 };

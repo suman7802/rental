@@ -41,7 +41,6 @@ model Unit {
   User      User       @relation(fields: [user], references: [id], onDelete: Cascade)
   user      Int
   name      String
-  location  String
   latitude  Float?
   longitude Float?
   rent      Float
