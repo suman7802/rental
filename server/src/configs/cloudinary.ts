@@ -12,13 +12,18 @@ cloudinary.config({
   api_secret: CLOUDINARY_API_SECRET,
 });
 
-// category: 'media' or 'profile'
-export  default function uploadMedia(files: any, uid: string, category: string) {
-  return files.map(async (file: any) => {
-    return await cloudinary.uploader.upload(file.tempFilePath, {
-      resource_type: file.mimetype === 'video/mp4' ? 'video' : 'image',
+export default async function uploadMedia(
+  file: any,
+  uid: string,
+  category: string
+): Promise<any> {
+  const image = await cloudinary.uploader.upload(
+    `data:${file.mimetype};base64,${file.buffer.toString('base64')}`,
+    {
+      resource_type: 'image',
       folder: `rental/${category}`,
       public_id: `${uid}}`,
-    });
-  });
+    }
+  );
+  return image.secure_url;
 }

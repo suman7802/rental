@@ -5,6 +5,7 @@ import asyncCatch from '../errors/catchAsync';
 import uploadMedia from '../configs/cloudinary';
 import CustomError from '../errors/customError';
 import createOrGetUser from '../utils/createOrGetUser';
+import convertStringToFloat from '../utils/stringToFloat';
 
 const user = {
   createOrGet: asyncCatch(
@@ -31,7 +32,7 @@ const user = {
       if (!isNaN(id)) whereClause.id = id;
       if (name) whereClause.name = {contains: name, mode: 'insensitive'};
 
-      const fetchedUser = await prisma.user.findFirst({
+      const fetchedUser = await prisma.user.findMany({
         where: whereClause,
         select: {
           bio: true,
@@ -72,32 +73,33 @@ const user = {
 
   update: asyncCatch(
     async (req: Request, res: Response, next: NextFunction) => {
-      const {id} = res.locals.user;
+      const {uid} = res.locals.user;
 
-      const verifiedUser = await prisma.user.findUnique({
-        where: {id},
-      });
+      const user = await prisma.user.findUnique({where: {uid}});
+      if (!user) throw new CustomError(`Not Found`, 404);
 
-      if (!verifiedUser) throw new CustomError(`Not Found`, 404);
-
-      if (verifiedUser?.verified === 'verified')
+      if (user?.verified === 'verified')
         throw new CustomError(`Forbidden due to kwc approved`, 403);
 
-      let profileUrl = verifiedUser.profile;
-      if (req.file) profileUrl = await uploadMedia(req.file, id, 'profile');
+      const { bio, phone, name,latitude,longitude } = req.body;
+
+      let updateData: any = {
+        bio: bio ?? user.bio,
+        phone: phone ?? user.phone,
+        name: name ? name.toLowerCase() : user.name,
+      };
+
+      if (latitude || longitude) {
+        updateData.latitude = req.body.latitude ? convertStringToFloat(req.body.latitude) : user.latitude;
+        updateData.longitude = req.body.longitude ? convertStringToFloat(req.body.longitude) : user.longitude;
+      }
+
+      if (req.file)
+        updateData.profile = await uploadMedia(req.file, uid, 'profile');
 
       const updatedUser = await prisma.user.update({
-        where: {id},
-
-        data: {
-          profile: profileUrl,
-          bio: req.body.bio ?? verifiedUser.bio,
-          phone: req.body.phone ?? verifiedUser.phone,
-          latitude: req.body.latitude ?? verifiedUser.latitude,
-          name: req.body.name.toLowerCase() ?? verifiedUser.name,
-          longitude: req.body.longitude ?? verifiedUser.longitude,
-        },
-
+        where: {uid},
+        data: updateData,
         select: {
           bio: true,
           name: true,
