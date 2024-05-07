@@ -8,24 +8,23 @@ datasource db {
 }
 
 model User {
-  id          Int        @id @default(autoincrement())
-  uid         String     @unique
-  email       String     @unique
+  id          Int            @id @default(autoincrement())
+  uid         String         @unique
+  email       String         @unique
   name        String?
-  picture     String?
-  verified    Boolean    @default(false)
+  profile     String?
+  verified    VerifiedStatus @default(notVerified)
   phone       String?
   latitude    Float?
   longitude   Float?
   FCMToken    String?
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  description String?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  bio         String?
   govId       String?
-  govId2      String?
   Unit        Unit[]
-  Favorites   Favorite[] @relation("userFavorites")
-  FavoritedBy Favorite[] @relation("FavoritesByUser")
+  Favorites   Favorite[]     @relation("userFavorites")
+  FavoritedBy Favorite[]     @relation("FavoritesByUser")
 }
 
 model Favorite {
@@ -66,4 +65,11 @@ enum rentalType {
   ride
   thing
   place
+}
+
+enum VerifiedStatus {
+  notVerified
+  requested
+  rejected
+  verified
 }

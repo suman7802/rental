@@ -18,3 +18,9 @@ export const FIREBASE_PROJECT_ID = process.env.FIREBASE_PROJECT_ID as string;
 export const FIREBASE_STORAGE_BUCKET = process.env.FIREBASE_STORAGE_BUCKET as string;
 export const FIREBASE_MESSAGING_SENDER_ID = process.env.FIREBASE_MESSAGING_SENDER_ID as string;
 export const FIREBASE_APP_ID = process.env.FIREBASE_APP_ID as string;
+
+
+// cloudinary config
+export const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY as string;
+export const CLOUDINARY_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME as string;
+export const CLOUDINARY_API_SECRET = process.env.CLOUDINARY_API_SECRET as string;
