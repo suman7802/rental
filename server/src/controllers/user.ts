@@ -145,21 +145,23 @@ const user = {
   ),
 
   verify: asyncCatch(async (req: Request, res: Response) => {
-    const {id} = res.locals.user;
+    const {uid} = res.locals.user;
 
-    if (!req.file || Object.keys(req.file).length === 0)
-      throw new CustomError(`GovID Not Found`, 404);
+    if (!req.file) throw new CustomError(`GovID Not Found`, 404);
 
-    const verified = await prisma.user.findUnique({where: {id}});
+    const verified = await prisma.user.findUnique({where: {uid}});
+
+    if (verified?.verified === 'requested')
+      throw new CustomError(`Already requested wait for approval`, 403);
 
     if (verified?.verified === 'verified')
       throw new CustomError(`Already Verified`, 400);
 
     let govIdUrl;
-    if (req.file) govIdUrl = await uploadMedia(req.file, id, 'govId');
+    if (req.file) govIdUrl = await uploadMedia(req.file, uid, 'govId');
 
     const updatedModel = await prisma.user.update({
-      where: {id},
+      where: {uid},
       data: {govId: govIdUrl},
     });
 
@@ -181,7 +183,7 @@ const user = {
       throw new CustomError(`Missing Fields: ${missingFields.join(', ')}`, 400);
 
     await prisma.user.update({
-      where: {id},
+      where: {uid},
       data: {verified: 'requested'},
     });
 
