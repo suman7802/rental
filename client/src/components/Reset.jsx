@@ -16,7 +16,7 @@ export default function Reset() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-80px)]">
+    <div className="flex items-center justify-center min-h-screen">
       <div className="max-w-xs  rounded-xl p-6 shadow-md m-5">
         <div className="text-center font-black text-3xl text-red-600">
           let&apos;s back in!

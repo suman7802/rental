@@ -7,8 +7,8 @@ import {Link} from 'react-router-dom';
 
 export default function Hero() {
   return (
-    <div className="bg-[url('./assets/hero.png')] bg-cover py-4 md:py-[20vh]">
-      <h1 className="text-4xl font-semibold text-center leading-relaxed">
+    <div className="bg-[url('./assets/hero.png')] h-[80vh] bg-cover py-4 md:py-[20vh]">
+      <h1 className="text-4xl font-semibold text-center leading-relaxed mt-20">
         <span className="md:inline block">Discover Your&nbsp;</span>
         <span className="text-red-500 md:inline block">Perfect Rental</span>
       </h1>

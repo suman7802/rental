@@ -5,10 +5,10 @@ import PopUpNav from './PopUpNav';
 import {useSelector} from 'react-redux';
 import {useState, useEffect} from 'react';
 import {ScrollTrigger} from 'gsap/ScrollTrigger';
+import {useMediaQuery} from 'react-responsive';
 import {Link, useLocation} from 'react-router-dom';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faBars, faPlus, faUser} from '@fortawesome/free-solid-svg-icons';
-
 import logo from '../assets/Rental.png';
 
 gsap.registerPlugin(useGSAP);
@@ -19,6 +19,7 @@ export default function NavBar() {
 
   const location = useLocation();
   const [show, setShow] = useState(false);
+  const isSmallDevice = useMediaQuery({query: '(max-width: 320px)'});
 
   const togglePopUpNav = (event) => {
     event.stopPropagation();
@@ -38,7 +39,7 @@ export default function NavBar() {
   useEffect(() => {
     const trigger = ScrollTrigger.create({
       start: 'top top',
-      end: 'bottom top',
+      end: 99999,
       onUpdate: (self) => {
         const {direction} = self;
         if (direction === 1)
@@ -118,7 +119,7 @@ export default function NavBar() {
             to={!isLoading && response ? '/postlisting' : '/auth'}
             className="bg-red-500 hover:bg-red-600 transition-colors duration-200 text-white py-2 px-4 rounded-[5vh] cursor-pointer">
             <FontAwesomeIcon icon={faPlus} />
-            &nbsp;Post Listing
+            &nbsp;Post {isSmallDevice ? '' : 'Listing'}
           </Link>
         </div>
       </nav>
