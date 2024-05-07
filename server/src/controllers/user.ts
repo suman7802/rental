@@ -123,18 +123,22 @@ const user = {
       const {uid} = res.locals.user;
       const business = req.params.id;
 
-      const businessExists = await prisma.user.findUnique({where: {id: Number(business)}});
+      const businessExists = await prisma.user.findUnique({
+        where: {id: Number(business)},
+      });
       if (!businessExists) throw new Error('Business does not exist');
 
-      const favoriteExists = await prisma.favorite.findFirst({where: {userId: uid, businessId: businessExists.uid}});
+      const favoriteExists = await prisma.favorite.findFirst({
+        where: {userId: uid, businessId: businessExists.uid},
+      });
 
       if (favoriteExists) {
         await prisma.favorite.delete({where: {id: favoriteExists.id}});
         res.status(200).send('Favorite removed');
-      }
-      
-      else {
-        await prisma.favorite.create({data: {userId: uid, businessId: businessExists.uid}});
+      } else {
+        await prisma.favorite.create({
+          data: {userId: uid, businessId: businessExists.uid},
+        });
         res.status(201).send('Favorite added');
       }
     }
