@@ -19,7 +19,9 @@ AxiosInstance.interceptors.response.use(
   (error) => {
     if (error.response && error.response.data.message === 'Token expired')
       return refreshUidAndRetry(error);
-    return Promise.reject(error.response.data.message || error.message || error);
+    return Promise.reject(
+      error.response.data.message || error.message || error
+    );
   }
 );
 
