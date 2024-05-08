@@ -61,8 +61,8 @@ npm run dev
 
 ## Usage
 
-[Postman Documentation]()
+[Postman Documentation](https://documenter.getpostman.com/view/27265804/2sA3JKc296)
 
 ## Table Relation
 
-[Table Relations]()
+[Table Relations](https://dbdiagram.io/d/rental-663b33389e85a46d5549de71)
