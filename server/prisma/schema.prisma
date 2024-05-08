@@ -37,20 +37,21 @@ model Favorite {
 }
 
 model Unit {
-  id        Int        @id @default(autoincrement())
-  User      User       @relation(fields: [user], references: [id], onDelete: Cascade)
-  user      Int
-  name      String
-  latitude  Float?
-  longitude Float?
-  rent      Float
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  Image     Image[]
-  type      rentalType @default(place)
+  id          Int            @id @default(autoincrement())
+  User        User           @relation(fields: [user], references: [id], onDelete: Cascade)
+  user        Int
+  title       String
+  description String
+  latitude    Float?
+  longitude   Float?
+  rent        Float
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  Media       Media[]
+  category    RentalCategory @default(place)
 }
 
-model Image {
+model Media {
   id        Int      @id @default(autoincrement())
   Unit      Unit     @relation(fields: [unit], references: [id], onDelete: Cascade)
   unit      Int
@@ -60,7 +61,7 @@ model Image {
   updatedAt DateTime @updatedAt
 }
 
-enum rentalType {
+enum RentalCategory {
   ride
   thing
   place

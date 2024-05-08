@@ -22,8 +22,26 @@ export default async function uploadMedia(
     {
       resource_type: 'image',
       folder: `rental/${category}`,
-      public_id: `${uid}}`,
+      public_id: `${uid.slice(0, 5)}}`,
     }
   );
   return image.secure_url;
+}
+
+export async function uploadMultipleMedia(
+  files: any[],
+  uid: string,
+  category: string
+) {
+  const promises = files.map(async (file) => {
+    return await cloudinary.uploader.upload(
+      `data:${file.mimetype};base64,${file.buffer.toString('base64')}`,
+      {
+        resource_type: 'auto',
+        folder: `rental/${category}`,
+        public_id: `${uid.slice(0, 5)}-${Date.now()}`,
+      }
+    );
+  });
+  return Promise.all(promises);
 }

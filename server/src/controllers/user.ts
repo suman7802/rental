@@ -45,9 +45,10 @@ const user = {
           Unit: {
             select: {
               id: true,
-              name: true,
-              Image: true,
-              type: true,
+              rent: true,
+              title: true,
+              Media: true,
+              category: true,
             },
           },
 

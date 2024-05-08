@@ -7,6 +7,7 @@ import express, {Application} from 'express';
 
 import authRoute from './routes/auth.routes';
 import userRoute from './routes/user.routes';
+import unitRoute from './routes/unit.routes';
 import errorHandler from './errors/errorHandler';
 import {NODE_ENV, PORT, ALLOW_ORIGIN} from './configs/keys';
 
@@ -27,6 +28,7 @@ app.use(express.urlencoded({extended: true}));
 
 app.use('/api/auth', authRoute);
 app.use('/api/user', userRoute);
+app.use('/api/unit', unitRoute);
 
 app.use(express.static(path.join(__dirname, '..', '..', 'client', 'dist')));
 app.get('*', (req, res) =>
