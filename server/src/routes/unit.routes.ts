@@ -6,9 +6,14 @@ import validate from '../middlewares/validateAuth';
 
 const unitRoute = express.Router();
 
+unitRoute.get('/get', unit.getAll);
+unitRoute.get('/get/:unitId', unit.getOne);
+
 unitRoute.use(validate.auth);
 
+unitRoute.delete('/delete/:unitId', unit.delete);
 unitRoute.post('/post', uploadToMemory.array('units'), unit.create);
 unitRoute.put('/update/:unitId', uploadToMemory.array('units'), unit.update);
+
 
 export default unitRoute;

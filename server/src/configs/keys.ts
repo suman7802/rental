@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
+// load environment variables
 export const PORT = process.env.PORT || 8000;
 export const SECRET = process.env.SECRET as string;
 export const NODE_ENV = process.env.NODE_ENV as string;
@@ -12,6 +13,7 @@ export const ADMIN = (process.env.ADMIN ? process.env.ADMIN : 'default').split('
 export const AGE_OF_COOKIE: number = Number(process.env.AGE_OF_COOKIE) || 1000 * 60 * 60 * 24 * 365;
 
 
+// firebase config
 export const FIREBASE_API_KEY = process.env.FIREBASE_API_KEY as string;
 export const FIREBASE_AUTH_DOMAIN = process.env.FIREBASE_AUTH_DOMAIN as string;
 export const FIREBASE_PROJECT_ID = process.env.FIREBASE_PROJECT_ID as string;
