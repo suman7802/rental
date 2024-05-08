@@ -1,12 +1,23 @@
-import {useSelector} from 'react-redux';
+import {useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+
 import Verified from '../assets/verify.png';
+import {myUnit} from '../redux/slice/profile';
 
 export default function Profile() {
+  const dispatch = useDispatch();
   const {response, isLoading} = useSelector((state) => state.auth);
-  if (isLoading || !response) return <div>Loading...</div>;
+  const {unit, loading, error} = useSelector((state) => state.profile);
+
+  useEffect(() => {
+    dispatch(myUnit());
+  }, [dispatch]);
+
+  if (!response || !unit) return <div>Loading...</div>;
 
   const user = response?.user;
-  console.log(user);
+  
+  console.log(unit);
 
   return (
     <section className="min-h-screen pt-28">

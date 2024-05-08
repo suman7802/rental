@@ -6,6 +6,7 @@ import asyncCatch from '../errors/catchAsync';
 import CustomError from '../errors/customError';
 import convertStringToFloat from '../utils/stringToFloat';
 import {uploadMultipleMedia} from '../configs/cloudinary';
+import user from './user';
 
 const post = {
   create: asyncCatch(
@@ -167,6 +168,27 @@ const post = {
       res.status(200).json(units);
     }
   ),
+
+  get: asyncCatch(async (req: Request, res: Response, next: NextFunction) => {
+    const {uid} = res.locals.user;
+
+    const user = await prisma.user.findUnique({where: {uid}});
+    if (!user) return next(new CustomError('User not found', 404));
+
+    const units = await prisma.unit.findMany({
+      where: {user: user.id},
+      include: {
+        Media: {
+          where: {isActive: true},
+          select: {id: true, url: true},
+        },
+      },
+    });
+
+    if (units.length === 0) return next(new CustomError('No units found', 404));
+
+    res.status(200).json(units);
+  }),
 };
 
 export default post;
