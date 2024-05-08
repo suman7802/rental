@@ -9,5 +9,6 @@ const unitRoute = express.Router();
 unitRoute.use(validate.auth);
 
 unitRoute.post('/post', uploadToMemory.array('units'), unit.create);
+unitRoute.put('/update/:unitId', uploadToMemory.array('units'), unit.update);
 
 export default unitRoute;
