@@ -9,16 +9,22 @@ export default function EditProfile({onClose}) {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target))
         onClose();
     }
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [onClose]);
 
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    // Handle form submission here
+  };
+
   return (
-    <div
+    <form
       ref={wrapperRef}
+      onSubmit={handleSubmit}
       className="wrapper fixed z-40 bg-[#9ba3afb8] backdrop-blur-sm  md:min-w-[40vw] flex flex-col p-5 gap-5 rounded-lg">
       <div className="text-center">
         <h1 className="text-xl font-bold">Edit Profile</h1>
@@ -58,7 +64,7 @@ export default function EditProfile({onClose}) {
           Cancel
         </button>
       </div>
-    </div>
+    </form>
   );
 }
 
