@@ -1,5 +1,7 @@
 import {useEffect} from 'react';
+import {faPencil} from '@fortawesome/free-solid-svg-icons';
 import {useDispatch, useSelector} from 'react-redux';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 import Verified from '../assets/verify.png';
 import {myUnit} from '../redux/slice/profile';
@@ -19,6 +21,8 @@ export default function Profile() {
 
   const user = response?.user;
 
+  console.log(user);
+
   return (
     <section className="min-h-screen p-10 flex flex-col gap-5 items-center">
       <div className="profile flex flex-col items-center gap-1 mt-20 lg:mt-28">
@@ -28,7 +32,7 @@ export default function Profile() {
             alt="profile"
             className="rounded-full max-h-40 max-w-40 border-4 border-gray-300"
           />
-          {user.verified === 'notVerified' && (
+          {user.verified === 'verified' && (
             <img
               src={Verified}
               alt="Verified"
@@ -38,8 +42,23 @@ export default function Profile() {
         </div>
 
         <div className="flex flex-col items-center">
-          <h1 className="text-xl font-bold">{user.name}</h1>
+          <div className="nameAndEdit flex flex-row items-baseline">
+            <h1 className="text-xl font-bold">{user.name}</h1>
+            <button className="text-sm text-blue-500">
+              <FontAwesomeIcon
+                icon={faPencil}
+                className="text-black text-[.7rem] ml-1 mb-[1px]"
+              />
+            </button>
+          </div>
+          <p className="text-sm text-gray-500">{user.phone}</p>
           <p className="text-sm text-gray-500">{user.email}</p>
+        </div>
+
+        <div className="bio">
+          <p className="text-center text-base text-gray-500 max-w-[50vw] md:max-w-[25vw]">
+            {user.bio ? user.bio : 'No bio available'}
+          </p>
         </div>
       </div>
 
