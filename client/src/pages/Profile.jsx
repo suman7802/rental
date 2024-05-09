@@ -3,6 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import Verified from '../assets/verify.png';
 import {myUnit} from '../redux/slice/profile';
+import MyUnits from '../components/MyUnits';
 
 export default function Profile() {
   const dispatch = useDispatch();
@@ -13,20 +14,19 @@ export default function Profile() {
     dispatch(myUnit());
   }, [dispatch]);
 
-  if (!response || !unit) return <div>Loading...</div>;
+  if (!response || !unit || isLoading || loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
 
   const user = response?.user;
-  
-  console.log(unit);
 
   return (
-    <section className="min-h-screen pt-28">
-      <div className="profile flex flex-col items-center">
+    <section className="min-h-screen p-10 flex flex-col gap-5 items-center">
+      <div className="profile flex flex-col items-center gap-1 mt-20 lg:mt-28">
         <div className="avatar relative">
           <img
             src={user.profile}
             alt="profile"
-            className="rounded-full max-h-40 max-w-40"
+            className="rounded-full max-h-40 max-w-40 border-4 border-gray-300"
           />
           {user.verified === 'notVerified' && (
             <img
@@ -39,7 +39,26 @@ export default function Profile() {
 
         <div className="flex flex-col items-center">
           <h1 className="text-xl font-bold">{user.name}</h1>
-          <p className="text-gray-500">{user.email}</p>
+          <p className="text-sm text-gray-500">{user.email}</p>
+        </div>
+      </div>
+
+      <div className="units my-5">
+        <h1 className="text-xl font-semibold text-center mb-4">
+          Your Listings
+        </h1>
+        <div className="flex flex-col flex-wrap md:flex-row items-center justify-center gap-5">
+          {unit.map((property, index) => (
+            <MyUnits
+              key={index}
+              propertyImage={property?.Media[0]?.url}
+              rentPrice={property.rent}
+              rentCurrency={property.rentCurrency}
+              rentPeriod={property.rentPeriod}
+              propertyName={property.title}
+              propertyLocation={property.propertyLocation}
+            />
+          ))}
         </div>
       </div>
     </section>
