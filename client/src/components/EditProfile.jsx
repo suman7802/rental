@@ -1,8 +1,17 @@
 import PropTypes from 'prop-types';
-import {useEffect, useRef} from 'react';
+import {useEffect, useRef, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+
+import {editProfile} from '../redux/slice/profile';
 
 export default function EditProfile({onClose}) {
   const wrapperRef = useRef(null);
+  const dispatch = useDispatch();
+  const {response, isLoading} = useSelector((state) => state.auth);
+
+  const [bio, setBio] = useState(response.user.bio);
+  const [name, setName] = useState(response.user.name);
+  const [phone, setPhone] = useState(response.user.phone);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -15,11 +24,24 @@ export default function EditProfile({onClose}) {
     };
   }, [onClose]);
 
+  const onChange = (event) => {
+    const {name, value} = event.target;
+    if (name === 'name') setName(value);
+    if (name === 'phone') setPhone(value);
+    if (name === 'bio') setBio(value);
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
-
-    // Handle form submission here
+    const data = new FormData();
+    data.append('name', name);
+    data.append('phone', phone);
+    data.append('bio', bio);
+    dispatch(editProfile(data));
+    console.log(data);
   };
+
+  if (!response || isLoading) return <div>Loading...</div>;
 
   return (
     <form
@@ -30,21 +52,34 @@ export default function EditProfile({onClose}) {
         <h1 className="text-xl font-bold">Edit Profile</h1>
         <p className="text-sm text-gray-800">Edit your profile here</p>
       </div>
+
       <input
+        name="name"
+        value={name}
+        onChange={onChange}
         type="text"
         className="name px-4 py-2 rounded-md outline-none"
         placeholder="Name"
       />
+
       <input
-        type="tel"
+        name="phone"
+        value={phone}
+        onChange={onChange}
+        type="text"
         className="phone px-4 py-2 rounded-md outline-none"
         placeholder="Phone"
       />
-      <input
-        type="text"
+
+      <textarea
+        name="bio"
+        value={bio}
+        onChange={onChange}
+        rows="4"
         className="bio px-4 py-2 rounded-md outline-none"
         placeholder="Bio"
       />
+
       <input
         type="file"
         className="image"

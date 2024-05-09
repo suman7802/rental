@@ -27,8 +27,6 @@ export default function Profile() {
 
   const user = response?.user;
 
-  console.log(user);
-
   return (
     <section className="min-h-screen p-10 flex flex-col gap-5 items-center">
       <div className="profile flex flex-col items-center gap-1 mt-20 lg:mt-28">
