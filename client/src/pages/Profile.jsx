@@ -1,4 +1,4 @@
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {faPencil} from '@fortawesome/free-solid-svg-icons';
 import {useDispatch, useSelector} from 'react-redux';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
@@ -6,11 +6,17 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import Verified from '../assets/verify.png';
 import {myUnit} from '../redux/slice/profile';
 import MyUnits from '../components/MyUnits';
+import EditProfile from '../components/EditProfile';
 
 export default function Profile() {
   const dispatch = useDispatch();
   const {response, isLoading} = useSelector((state) => state.auth);
   const {unit, loading, error} = useSelector((state) => state.profile);
+  const [showPOPUP, setShowPOPUP] = useState(false);
+
+  const togglePOPUP = () => {
+    setShowPOPUP(() => !showPOPUP);
+  };
 
   useEffect(() => {
     dispatch(myUnit());
@@ -41,10 +47,12 @@ export default function Profile() {
           )}
         </div>
 
+        {showPOPUP && <EditProfile onClose={() => setShowPOPUP(false)} />}
+
         <div className="flex flex-col items-center">
           <div className="nameAndEdit flex flex-row items-baseline">
             <h1 className="text-xl font-bold">{user.name}</h1>
-            <button className="text-sm text-blue-500">
+            <button className="text-sm text-blue-500" onClick={togglePOPUP}>
               <FontAwesomeIcon
                 icon={faPencil}
                 className="text-black text-[.7rem] ml-1 mb-[1px]"
