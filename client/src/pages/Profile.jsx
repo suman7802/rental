@@ -1,13 +1,13 @@
 import {Routes, Route} from 'react-router-dom';
 
 import ProfileHome from '../components/ProfileHome';
-import Setting from '../components/settings/Index';
+import AccountSetting from '../components/settings/AccountSetting';
 
 export default function Profile() {
   return (
     <Routes>
       <Route path="/" element={<ProfileHome />} />
-      <Route path="/setting/*" element={<Setting />} />
+      <Route path="/account" element={<AccountSetting />} />
     </Routes>
   );
 }

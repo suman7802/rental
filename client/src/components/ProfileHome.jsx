@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+import {faPencil} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faPencil, faEllipsisVertical} from '@fortawesome/free-solid-svg-icons';
 
 import Verified from '../assets/verify.png';
 import MyUnits from '../components/MyUnits';
@@ -36,12 +36,6 @@ export default function Profile() {
         <p className="absolute top-[50%]">Loading...</p>
       ) : (
         <>
-          <button className="absolute More top-[6rem] right-5 flex flex-row gap-3 items-center">
-            <FontAwesomeIcon
-              icon={faEllipsisVertical}
-              className="text-black text-[1.5rem]"
-            />
-          </button>
           <div className="profile flex flex-col items-center gap-1 mt-20">
             <div className="avatar relative">
               <img
