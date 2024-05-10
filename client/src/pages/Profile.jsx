@@ -1,6 +1,6 @@
 import {Routes, Route} from 'react-router-dom';
 
-import ProfileHome from '../components/ProfileHome';
+import ProfileHome from '../components/Profile';
 import AccountSetting from '../components/settings/AccountSetting';
 
 export default function Profile() {

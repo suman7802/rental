@@ -15,16 +15,11 @@ gsap.registerPlugin(useGSAP);
 gsap.registerPlugin(ScrollTrigger);
 
 export default function NavBar() {
-  const {response, isLoading} = useSelector((state) => state.auth);
-
+  const animatedNav = useRef();
   const location = useLocation();
   const [show, setShow] = useState(false);
+  const {response, isLoading} = useSelector((state) => state.auth);
   const isSmallDevice = useMediaQuery({query: '(max-width: 320px)'});
-
-  const togglePopUpNav = (event) => {
-    event.stopPropagation();
-    setShow((show) => !show);
-  };
 
   useEffect(() => {
     const hidePopUpNav = () => {
@@ -33,8 +28,6 @@ export default function NavBar() {
     if (show) document.addEventListener('click', hidePopUpNav);
     return () => document.removeEventListener('click', hidePopUpNav);
   }, [show]);
-
-  const animatedNav = useRef();
 
   useEffect(() => {
     const trigger = ScrollTrigger.create({
@@ -52,6 +45,11 @@ export default function NavBar() {
       if (trigger) trigger.kill();
     };
   }, []);
+
+  const togglePopUpNav = (event) => {
+    event.stopPropagation();
+    setShow((show) => !show);
+  };
 
   return (
     <>

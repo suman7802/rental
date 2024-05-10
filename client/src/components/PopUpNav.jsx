@@ -5,8 +5,8 @@ import {gsap} from 'gsap';
 import {useEffect, useRef} from 'react';
 
 export default function PopUpNav() {
-  const {isLoading, response} = useSelector((state) => state.auth);
   const navRef = useRef();
+  const {isLoading, response} = useSelector((state) => state.auth);
 
   useEffect(() => {
     gsap.from(navRef.current, {

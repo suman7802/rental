@@ -12,7 +12,8 @@ const validate = {
     const decodedToken = jwt.decode(idToken!) as {exp: number};
     const currentTimeInSeconds = Math.floor(Date.now() / 1000);
 
-    if (decodedToken.exp < currentTimeInSeconds)
+    if (!decodedToken) throw new CustomError('Invalid token', 401);
+    if (decodedToken?.exp < currentTimeInSeconds)
       throw new CustomError('Token expired', 401);
 
     admin

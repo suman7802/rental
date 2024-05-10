@@ -79,28 +79,22 @@ const user = {
       const user = await prisma.user.findUnique({where: {uid}});
       if (!user) throw new CustomError(`Not Found`, 404);
 
-      if (user?.verified === 'verified')
-        throw new CustomError(`Forbidden due to kwc approved`, 403);
-
       const {bio, phone, name, latitude, longitude} = req.body;
 
-      let updateData: any = {
-        bio: bio ?? user.bio,
-        phone: phone ?? user.phone,
-        name: name ? name.toLowerCase() : user.name,
-      };
+      let updateData: any = {bio: bio};
 
-      if (latitude || longitude) {
-        updateData.latitude = req.body.latitude
-          ? convertStringToFloat(req.body.latitude)
-          : user.latitude;
-        updateData.longitude = req.body.longitude
-          ? convertStringToFloat(req.body.longitude)
-          : user.longitude;
+      if (user?.verified !== 'verified') {
+        updateData.phone = phone;
+        updateData.name = name?.toLowerCase();
+
+        if (latitude || longitude) {
+          updateData.latitude = convertStringToFloat(latitude);
+          updateData.longitude = convertStringToFloat(longitude);
+        }
+
+        if (req.file)
+          updateData.profile = await uploadMedia(req.file, uid, 'profile');
       }
-
-      if (req.file)
-        updateData.profile = await uploadMedia(req.file, uid, 'profile');
 
       const updatedUser = await prisma.user.update({
         where: {uid},

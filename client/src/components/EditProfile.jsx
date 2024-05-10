@@ -15,6 +15,18 @@ export default function EditProfile({onClose}) {
   const [name, setName] = useState(response.user.name);
   const [phone, setPhone] = useState(response.user.phone);
 
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (popupRef.current && !popupRef.current.contains(event.target))
+        onClose();
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [onClose]);
+
   const onChange = (event) => {
     const {name, value} = event.target;
     if (name === 'name') setName(value);
@@ -46,17 +58,7 @@ export default function EditProfile({onClose}) {
     }
   };
 
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (popupRef.current && !popupRef.current.contains(event.target))
-        onClose();
-    }
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [onClose]);
+  console.log(response?.user?.verified);
 
   return (
     <form
@@ -67,24 +69,27 @@ export default function EditProfile({onClose}) {
         <h1 className="text-xl font-bold">Edit Profile</h1>
         <p className="text-sm text-gray-800">Edit your profile here</p>
       </div>
+      {response?.user?.verified !== 'verified' && (
+        <>
+          <input
+            name="name"
+            value={name}
+            onChange={onChange}
+            type="text"
+            className="name px-4 py-2 rounded-md outline-none capitalize"
+            placeholder="Name"
+          />
 
-      <input
-        name="name"
-        value={name}
-        onChange={onChange}
-        type="text"
-        className="name px-4 py-2 rounded-md outline-none"
-        placeholder="Name"
-      />
-
-      <input
-        name="phone"
-        value={phone}
-        onChange={onChange}
-        type="text"
-        className="phone px-4 py-2 rounded-md outline-none"
-        placeholder="Phone"
-      />
+          <input
+            name="phone"
+            value={phone}
+            onChange={onChange}
+            type="text"
+            className="phone px-4 py-2 rounded-md outline-none"
+            placeholder="Phone"
+          />
+        </>
+      )}
 
       <textarea
         name="bio"
@@ -94,14 +99,15 @@ export default function EditProfile({onClose}) {
         className="bio px-4 py-2 rounded-md outline-none"
         placeholder="Bio"
       />
-
-      <input
-        type="file"
-        className="profile"
-        onChange={handleProfileChange}
-        accept="image/*"
-        placeholder="Upload Image"
-      />
+      {response?.user?.verified !== 'verified' && (
+        <input
+          type="file"
+          className="profile"
+          onChange={handleProfileChange}
+          accept="image/*"
+          placeholder="Upload Image"
+        />
+      )}
 
       <hr className="border-black" />
 
