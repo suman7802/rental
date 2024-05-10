@@ -1,12 +1,11 @@
 import {useState} from 'react';
-import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {signOut} from '../../redux/slice/auth';
 import {reqVerify} from '../../redux/slice/profile';
 
-export default function AccountSetting({status}) {
+export default function AccountSetting() {
   const dispatch = useDispatch();
   const [govId, setGovId] = useState(null);
   const {response, isLoading} = useSelector((state) => state.auth);
@@ -87,7 +86,3 @@ export default function AccountSetting({status}) {
     </div>
   );
 }
-
-AccountSetting.propTypes = {
-  status: PropTypes.string,
-};
