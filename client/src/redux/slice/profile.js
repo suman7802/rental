@@ -29,6 +29,21 @@ export const editProfile = createAsyncThunk(
   }
 );
 
+export const reqVerify = createAsyncThunk(
+  'profile/reqVerify',
+  async (data, {rejectWithValue}) => {
+    try {
+      const response = await AxiosInstance.put('/user/verify', data, {
+        headers: {'Content-Type': 'multipart/form-data'},
+        timeout: 0,
+      });
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
 const initialState = {
   unit: [],
   loading: false,
@@ -63,6 +78,21 @@ export const unitSlice = createSlice({
         state.statusCode = action.meta.requestStatus;
       })
       .addCase(editProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+
+    builder
+      .addCase(reqVerify.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(reqVerify.fulfilled, (state, action) => {
+        state.loading = false;
+        state.statusCode = action.meta.requestStatus;
+
+        console.log(action.payload);
+      })
+      .addCase(reqVerify.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

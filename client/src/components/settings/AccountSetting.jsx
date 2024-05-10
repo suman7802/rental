@@ -1,8 +1,15 @@
 import {useState} from 'react';
 import PropTypes from 'prop-types';
+import {Link} from 'react-router-dom';
+import {useDispatch, useSelector} from 'react-redux';
+
+import {signOut} from '../../redux/slice/auth';
+import {reqVerify} from '../../redux/slice/profile';
 
 export default function AccountSetting({status}) {
+  const dispatch = useDispatch();
   const [govId, setGovId] = useState(null);
+  const {response, isLoading} = useSelector((state) => state.auth);
 
   const handleGovIdChange = (event) => {
     setGovId(event.target.files[0]);
@@ -12,7 +19,10 @@ export default function AccountSetting({status}) {
     event.preventDefault();
     const data = new FormData();
     if (govId) data.append('govId', govId);
-    if (data.has('govId')) console.log(data.get('govId'));
+    if (data.has('govId')) {
+      console.log(data.get('govId'));
+      dispatch(reqVerify(data));
+    }
   };
 
   return (
@@ -26,13 +36,13 @@ export default function AccountSetting({status}) {
             To verify your account, please upload a valid ID card or passport.
           </p>
 
-          <div className="status flex flex-row gap-2">
-            <h2>Status</h2>
+          <div className="status flex flex-row gap-2 items-center">
+            <h2 className="font-bold text-lg">Status</h2>
             <p
               className={`${
-                status === 'verified' ? 'text-green-500' : 'text-red-500'
-              }`}>
-              {status}
+                response?.user?.verified ? 'text-green-500' : 'text-red-500'
+              } capitalize font-semibold text-base`}>
+              {response?.user?.verified}
             </p>
           </div>
 
@@ -64,9 +74,14 @@ export default function AccountSetting({status}) {
         <hr className="mt-6 " />
         <div className="logout">
           <h2 className="text-2xl font-bold  my-5 text-center">Log out</h2>
-          <button className="bg-[#EF4444] hover:bg-red-600 rounded-md py-2 text-white w-full">
-            Log out
-          </button>
+
+          <div className="bg-[#EF4444] hover:bg-red-600 rounded-md py-2 text-white w-full flex items-center justify-center">
+            {!isLoading && response && (
+              <Link onClick={() => dispatch(signOut())} to="/">
+                Sign out
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     </div>
