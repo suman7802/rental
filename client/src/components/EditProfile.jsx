@@ -5,47 +5,62 @@ import {useDispatch, useSelector} from 'react-redux';
 import {editProfile} from '../redux/slice/profile';
 
 export default function EditProfile({onClose}) {
-  const wrapperRef = useRef(null);
+  const popupRef = useRef(null);
   const dispatch = useDispatch();
-  const {response, isLoading} = useSelector((state) => state.auth);
+  const {response} = useSelector((state) => state.auth);
+  const {loading} = useSelector((state) => state.profile);
 
+  const [profile, setProfile] = useState(null);
   const [bio, setBio] = useState(response.user.bio);
   const [name, setName] = useState(response.user.name);
   const [phone, setPhone] = useState(response.user.phone);
-
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (wrapperRef.current && !wrapperRef.current.contains(event.target))
-        onClose();
-    }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [onClose]);
 
   const onChange = (event) => {
     const {name, value} = event.target;
     if (name === 'name') setName(value);
     if (name === 'phone') setPhone(value);
     if (name === 'bio') setBio(value);
+    if (name === 'profile') setProfile(value);
+  };
+
+  const handleProfileChange = (event) => {
+    setProfile(event.target.files[0]);
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData();
-    data.append('name', name);
-    data.append('phone', phone);
-    data.append('bio', bio);
-    dispatch(editProfile(data));
-    console.log(data);
+
+    if (name !== response.user.name) data.append('name', name);
+    if (phone !== response.user.phone) data.append('phone', phone);
+    if (bio !== response.user.bio) data.append('bio', bio);
+    if (profile) data.append('profile', profile);
+
+    if (
+      data.has('bio') ||
+      data.has('name') ||
+      data.has('phone') ||
+      data.has('profile')
+    ) {
+      dispatch(editProfile(data));
+    }
   };
 
-  if (!response || isLoading) return <div>Loading...</div>;
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (popupRef.current && !popupRef.current.contains(event.target))
+        onClose();
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [onClose]);
 
   return (
     <form
-      ref={wrapperRef}
+      ref={popupRef}
       onSubmit={handleSubmit}
       className="wrapper fixed z-40 bg-[#9ba3afb8] backdrop-blur-sm  md:min-w-[40vw] flex flex-col p-5 gap-5 rounded-lg">
       <div className="text-center">
@@ -82,7 +97,8 @@ export default function EditProfile({onClose}) {
 
       <input
         type="file"
-        className="image"
+        className="profile"
+        onChange={handleProfileChange}
         accept="image/*"
         placeholder="Upload Image"
       />
@@ -91,7 +107,7 @@ export default function EditProfile({onClose}) {
 
       <div className="buttons flex flex-col gap-3">
         <button className="bg-gradient-to-r from-purple-500  to-pink-500 hover:to-pink-800 hover:from-purple-800 rounded-md py-2 text-white">
-          Save
+          {loading ? 'Loading...' : 'Save'}
         </button>
         <button
           onClick={onClose}
