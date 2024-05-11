@@ -8,6 +8,7 @@ const baseURL =
     : import.meta.env.VITE_PROD_API_URL;
 
 console.log('baseURL', baseURL);
+console.log(import.meta.env.VITE_PROD_API_URL);
 
 const AxiosInstance = axios.create({
   baseURL,
