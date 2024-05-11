@@ -91,15 +91,20 @@ export default function AccountSetting() {
               </form>
               <div className="note">
                 <p className="text-sm">
-                  Note: Your ID card or passport should be valid and not
-                  expired. it should be in the format of jpg, jpeg or png. and
-                  it take 1-2 days to verify your account.
+                  Your ID card or passport should be valid and not expired. it
+                  should be in the format of jpg, jpeg or png. and it take 1-2
+                  days to verify your account.
+                </p>
+                <p className="text-[13px] mt-4">
+                  Note: You can&apos;t change your contact info and
+                  profile after verification. only bio can be changed.
                 </p>
               </div>
             </div>
             <hr className="mt-6 " />
           </>
         )}
+
         <div className="logout">
           <h2 className="text-2xl font-bold  my-5 text-center">Log out</h2>
 
