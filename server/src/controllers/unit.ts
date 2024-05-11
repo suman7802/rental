@@ -152,7 +152,7 @@ const post = {
 
       const units = await prisma.unit.findMany({
         include: {
-          User: {select: {name: true, email: true}},
+          User: {select: {name: true, profile: true}},
           Media: {
             where: {isActive: true},
             select: {id: true, url: true},

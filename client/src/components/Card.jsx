@@ -4,6 +4,7 @@ import {faHeart} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 export default function Card({
+  id,
   propertyImage,
   forRent = 'rent',
   rentPrice,
@@ -11,13 +12,9 @@ export default function Card({
   rentPeriod = 'month',
   propertyName,
   propertyLocation,
-  bedrooms,
-  bathrooms,
-  squareFeet,
   profileImage,
   ownerName,
-  fev,
-  url,
+  fev = true,
 }) {
   return (
     <div className="flex flex-col items-start rounded-lg border border-gray-300 w-fit">
@@ -42,7 +39,7 @@ export default function Card({
 
         <div className="flex flex-row items-baseline gap-1">
           <Link
-            to={url}
+            to={id}
             className="nameAddress capitalize font-semibold hover:underline hover:cursor-pointer">
             {propertyName}
           </Link>
@@ -52,14 +49,6 @@ export default function Card({
             className="text-sm hover:underline hover:cursor-pointer">
             {propertyLocation}
           </Link>
-        </div>
-
-        <div className="specs text-xs flex flex-row items-center gap-2 justify-around">
-          <span>{bedrooms} Bedrooms</span>
-          <div className="space bg-black w-[1.5px] h-5" />
-          <span>{bathrooms} Bathrooms</span>
-          <div className="space bg-black w-[1.5px] h-5" />
-          <span>{squareFeet} SquareFT</span>
         </div>
       </div>
 
@@ -93,18 +82,15 @@ export default function Card({
 }
 
 Card.propTypes = {
+  id: PropTypes.number.isRequired,
   propertyImage: PropTypes.string.isRequired,
-  forRent: PropTypes.string.isRequired,
-  rentPrice: PropTypes.string.isRequired,
-  rentCurrency: PropTypes.string.isRequired,
-  rentPeriod: PropTypes.string.isRequired,
+  forRent: PropTypes.string,
+  rentPrice: PropTypes.number.isRequired,
+  rentCurrency: PropTypes.string,
+  rentPeriod: PropTypes.number,
   propertyName: PropTypes.string.isRequired,
   propertyLocation: PropTypes.string.isRequired,
-  bedrooms: PropTypes.string.isRequired,
-  bathrooms: PropTypes.string.isRequired,
-  squareFeet: PropTypes.string.isRequired,
   profileImage: PropTypes.string.isRequired,
   ownerName: PropTypes.string.isRequired,
-  fev: PropTypes.bool.isRequired,
-  url: PropTypes.string.isRequired,
+  fev: PropTypes.bool,
 };

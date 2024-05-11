@@ -14,6 +14,18 @@ export const myUnit = createAsyncThunk(
   }
 );
 
+export const publicUnit = createAsyncThunk(
+  'profile/unit',
+  async (_, {rejectWithValue}) => {
+    try {
+      const response = await AxiosInstance.get('/unit/get');
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
 const initialState = {
   unit: [],
   loading: false,
@@ -34,6 +46,19 @@ export const unitSlice = createSlice({
         state.loading = false;
       })
       .addCase(myUnit.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+
+    builder
+      .addCase(publicUnit.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(publicUnit.fulfilled, (state, action) => {
+        state.loading = false;
+        state.unit = action.payload;
+      })
+      .addCase(publicUnit.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
