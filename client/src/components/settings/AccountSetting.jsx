@@ -83,9 +83,11 @@ export default function AccountSetting() {
                   className="mt-2 bg-[#EF4444] hover:bg-red-600 rounded-md py-2 text-white w-full">
                   Upload{loading && 'ing...'}
                 </button>
-                <p className="errorMessage text-red-500 text-base font-semibold">
-                  {error && 'Something went wrong, please try again'}
-                </p>
+                {error && (
+                  <p className="errorMessage text-red-500 text-base font-semibold">
+                    {error}
+                  </p>
+                )}
               </form>
               <div className="note">
                 <p className="text-sm">

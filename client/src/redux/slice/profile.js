@@ -39,7 +39,8 @@ export const reqVerify = createAsyncThunk(
       });
       return response.data;
     } catch (err) {
-      return rejectWithValue(err.response.data);
+      // console.log(err); Missing Fields: latitude, longitude
+      return rejectWithValue(err);
     }
   }
 );
@@ -92,7 +93,7 @@ export const unitSlice = createSlice({
       })
       .addCase(reqVerify.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error;
+        state.error = action.payload;
       });
   },
 });
