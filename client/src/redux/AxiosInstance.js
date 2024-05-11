@@ -3,9 +3,11 @@ import Token from '../utils/Token';
 import refreshUidAndRetry from './refreshToken';
 
 const baseURL =
-  import.meta.env.VITE_NODE_ENV === 'production'
+  import.meta.env.VITE_NODE_ENV === 'development'
     ? import.meta.env.VITE_DEV_API_URL
     : import.meta.env.VITE_PROD_API_URL;
+
+console.log('baseURL', baseURL);
 
 const AxiosInstance = axios.create({
   baseURL,
