@@ -82,7 +82,6 @@ const user = {
       const {bio, phone, name, latitude, longitude} = req.body;
 
       let updateData: any = {bio: bio};
-
       if (user?.verified !== 'verified') {
         updateData.phone = phone;
         updateData.name = name?.toLowerCase();

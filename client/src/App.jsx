@@ -6,19 +6,21 @@ import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import Home from './home/Index';
 import Test from './redux/Test';
 import Auth from './pages/Auth';
-import './services/auth.service';
 import About from './pages/About';
+import Token from './utils/Token';
+import Profile from './pages/Profile';
 import Contact from './pages/Contact';
 import Footer from './components/Footer';
 import NavBar from './components/NavBar';
-import Profile from './pages/Profile';
 
 export default function App() {
   const dispatch = useDispatch();
 
+  const haveToken = Token.retrieveIdToken();
+
   useEffect(() => {
-    dispatch(fetchProfile());
-  });
+    if (haveToken) dispatch(fetchProfile());
+  }, [dispatch, haveToken]);
 
   return (
     <div className="relative text-lg xl:text-xl 2xl:text-2xl">
