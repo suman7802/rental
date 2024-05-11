@@ -5,21 +5,21 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 import Verified from '../assets/verify.png';
 import MyUnits from './MyUnits';
-import {myUnit} from '../redux/slice/unit';
+import {getMyUnit} from '../redux/slice/unit';
 import EditProfile from './EditProfile';
 
 export default function Profile() {
   const dispatch = useDispatch();
   const [showPOPUP, setShowPOPUP] = useState(false);
 
-  const {unit, loading} = useSelector((state) => state.unit);
+  const {myUnit, loading} = useSelector((state) => state.unit);
   const {statusCode} = useSelector((state) => state.profile);
   const {response, isLoading} = useSelector((state) => state.auth);
 
   const user = response?.user;
 
   useEffect(() => {
-    dispatch(myUnit());
+    dispatch(getMyUnit());
   }, [dispatch]);
 
   useEffect(() => {
@@ -82,7 +82,7 @@ export default function Profile() {
             </h1>
             <div className="flex flex-col flex-wrap md:flex-row items-center justify-center gap-5">
               {!loading &&
-                unit.map((property, index) => (
+                myUnit.map((property, index) => (
                   <MyUnits
                     key={index}
                     propertyImage={property?.Media[0]?.url}

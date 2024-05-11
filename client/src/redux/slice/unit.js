@@ -2,7 +2,7 @@ import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 
 import AxiosInstance from '../AxiosInstance';
 
-export const myUnit = createAsyncThunk(
+export const getMyUnit = createAsyncThunk(
   'profile/myUnit',
   async (_, {rejectWithValue}) => {
     try {
@@ -28,6 +28,7 @@ export const publicUnit = createAsyncThunk(
 
 const initialState = {
   unit: [],
+  myUnit: [],
   loading: false,
   error: null,
 };
@@ -38,14 +39,14 @@ export const unitSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(myUnit.pending, (state) => {
+      .addCase(getMyUnit.pending, (state) => {
         state.loading = true;
       })
-      .addCase(myUnit.fulfilled, (state, action) => {
-        state.unit = action.payload;
+      .addCase(getMyUnit.fulfilled, (state, action) => {
+        state.myUnit = action.payload;
         state.loading = false;
       })
-      .addCase(myUnit.rejected, (state, action) => {
+      .addCase(getMyUnit.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
