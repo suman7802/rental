@@ -7,10 +7,6 @@ const baseURL =
     ? import.meta.env.VITE_DEV_API_URL
     : import.meta.env.VITE_PROD_API_URL;
 
-console.log('baseURL', baseURL);
-console.log(import.meta.env.VITE_NODE_ENV);
-console.log(import.meta.env.VITE_PROD_API_URL);
-
 const AxiosInstance = axios.create({
   baseURL,
   headers: {'Content-Type': 'application/json'},
