@@ -8,7 +8,8 @@ export const NODE_ENV = process.env.NODE_ENV as string;
 export const JWT_SECRET = process.env.JWT_SECRET as string;
 export const COOKIE_NAME = process.env.COOKIE_NAME as string;
 export const DATABASE_URL = process.env.DATABASE_URL as string;
-export const ALLOW_ORIGIN = process.env.ALLOW_ORIGIN as string;
+export const DEV_ORIGIN = process.env.DEV_ORIGIN as string;
+export const PROD_ORIGIN = process.env.PROD_ORIGIN as string;
 export const ADMIN = (process.env.ADMIN ? process.env.ADMIN : 'default').split(',');
 export const AGE_OF_COOKIE: number = Number(process.env.AGE_OF_COOKIE) || 1000 * 60 * 60 * 24 * 365;
 

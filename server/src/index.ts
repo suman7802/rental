@@ -9,13 +9,13 @@ import authRoute from './routes/auth.routes';
 import userRoute from './routes/user.routes';
 import unitRoute from './routes/unit.routes';
 import errorHandler from './errors/errorHandler';
-import {NODE_ENV, PORT, ALLOW_ORIGIN} from './configs/keys';
+import {NODE_ENV, PORT, DEV_ORIGIN, PROD_ORIGIN} from './configs/keys';
 
 const app: Application = express();
 const isLocal = NODE_ENV === 'development';
 
 const corsOptions = {
-  origin: isLocal ? ALLOW_ORIGIN : undefined,
+  origin: isLocal ? DEV_ORIGIN : PROD_ORIGIN,
   credentials: isLocal ? true : false,
 };
 

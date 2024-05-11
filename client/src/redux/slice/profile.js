@@ -89,12 +89,10 @@ export const unitSlice = createSlice({
       .addCase(reqVerify.fulfilled, (state, action) => {
         state.loading = false;
         state.statusCode = action.meta.requestStatus;
-
-        console.log(action.payload);
       })
       .addCase(reqVerify.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error;
       });
   },
 });

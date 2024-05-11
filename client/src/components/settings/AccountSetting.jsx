@@ -8,8 +8,8 @@ import {reqVerify} from '../../redux/slice/profile';
 export default function AccountSetting() {
   const dispatch = useDispatch();
   const [govId, setGovId] = useState(null);
-  const {response, isLoading} = useSelector((state) => state.auth);
-  const {statusCode} = useSelector((state) => state.profile);
+  const {response} = useSelector((state) => state.auth);
+  const {statusCode, loading, error} = useSelector((state) => state.profile);
 
   useEffect(() => {
     if (statusCode === 'fulfilled') {
@@ -25,10 +25,7 @@ export default function AccountSetting() {
     event.preventDefault();
     const data = new FormData();
     if (govId) data.append('govId', govId);
-    if (data.has('govId')) {
-      console.log(data.get('govId'));
-      dispatch(reqVerify(data));
-    }
+    if (data.has('govId')) dispatch(reqVerify(data));
   };
 
   const getStatus = (status) => {
@@ -84,8 +81,11 @@ export default function AccountSetting() {
                 <button
                   type="submit"
                   className="mt-2 bg-[#EF4444] hover:bg-red-600 rounded-md py-2 text-white w-full">
-                  Upload
+                  Upload{loading && 'ing...'}
                 </button>
+                <p className="errorMessage text-red-500 text-base font-semibold">
+                  {error && 'Something went wrong, please try again'}
+                </p>
               </form>
               <div className="note">
                 <p className="text-sm">

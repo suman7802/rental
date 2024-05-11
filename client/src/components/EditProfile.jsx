@@ -58,8 +58,6 @@ export default function EditProfile({onClose}) {
     }
   };
 
-  console.log(response?.user?.verified);
-
   return (
     <form
       ref={popupRef}
