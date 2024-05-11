@@ -2,8 +2,13 @@ import axios from 'axios';
 import Token from '../utils/Token';
 import refreshUidAndRetry from './refreshToken';
 
+const baseURL =
+  import.meta.env.VITE_NODE_ENV === 'production'
+    ? import.meta.env.VITE_DEV_API_URL
+    : import.meta.env.VITE_PROD_API_URL;
+
 const AxiosInstance = axios.create({
-  baseURL: 'http://localhost:8000/api',
+  baseURL,
   headers: {'Content-Type': 'application/json'},
   timeout: 5000,
 });

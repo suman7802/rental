@@ -102,11 +102,9 @@ export default function AccountSetting() {
           <h2 className="text-2xl font-bold  my-5 text-center">Log out</h2>
 
           <div className="bg-[#EF4444] hover:bg-red-600 rounded-md py-2 text-white w-full flex items-center justify-center">
-            {!isLoading && response && (
-              <Link onClick={() => dispatch(signOut())} to="/">
-                Sign out
-              </Link>
-            )}
+            <Link onClick={() => dispatch(signOut())} to="/">
+              Sign out
+            </Link>
           </div>
         </div>
       </div>
