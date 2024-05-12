@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
+import {useState, useEffect} from 'react';
 import {faHeart} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
@@ -16,6 +17,24 @@ export default function Card({
   ownerName,
   fev = true,
 }) {
+  const [locationName, setLocationName] = useState('');
+
+  useEffect(() => {
+    const [lat, lng] = propertyLocation.split(',').map(Number);
+    fetch(
+      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${
+        import.meta.env.VITE_GOOGLE_MAPS_API_KEY
+      }`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        if (data.results && data.results.length > 0)
+          setLocationName(data.results[0].formatted_address);
+      })
+      .catch((error) => console.error(error));
+  }, [propertyLocation]);
+
   return (
     <div className="flex flex-col items-start rounded-lg border border-gray-300 w-fit">
       <div className="relative picture">
@@ -45,9 +64,9 @@ export default function Card({
           </Link>
           <span className="text-sm">in</span>
           <Link
-            to={`/location/${propertyLocation}`}
+            to={`/location/${locationName}`}
             className="text-sm hover:underline hover:cursor-pointer">
-            {propertyLocation}
+            {locationName}
           </Link>
         </div>
       </div>

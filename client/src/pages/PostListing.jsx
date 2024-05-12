@@ -4,9 +4,9 @@ import {
   useLoadScript,
   StandaloneSearchBox,
 } from '@react-google-maps/api';
-import {useDispatch} from 'react-redux';
 import {createUnit} from '../redux/slice/unit';
 import {useRef, useState, useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 
 const libraries = ['places'];
 
@@ -19,6 +19,7 @@ export default function PostListing() {
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
     libraries,
   });
+  const {status, loading} = useSelector((state) => state.unit);
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -53,6 +54,15 @@ export default function PostListing() {
     const data = Object.fromEntries(formData.entries());
     dispatch(createUnit(data));
   };
+
+  useEffect(() => {
+    if (status === true) {
+      setTimeout(() => {
+        formRef.current.reset();
+        setLocation({lat: 0, lng: 0});
+      }, 1000);
+    }
+  }, [status]);
 
   return (
     <div className="postListing pt-32 min-h-screen flex flex-row justify-center">
@@ -133,8 +143,22 @@ export default function PostListing() {
         <button
           type="submit"
           className="bg-red-500 hover:bg-red-600 text-white rounded-md p-2 mt-1">
-          Submit
+          Submit {loading && 'Uploading...'}
         </button>
+        <p
+          className={`text-center text-sm ${
+            status === true
+              ? 'text-green-500'
+              : status === false
+              ? 'text-red-500'
+              : ''
+          }`}>
+          {status === true
+            ? 'Listing created successfully'
+            : status === false
+            ? 'Failed to create listing'
+            : ''}
+        </p>
       </form>
     </div>
   );

@@ -46,6 +46,7 @@ const initialState = {
   myUnit: [],
   loading: false,
   error: null,
+  status: null,
 };
 
 export const unitSlice = createSlice({
@@ -58,8 +59,9 @@ export const unitSlice = createSlice({
         state.loading = true;
       })
       .addCase(getMyUnit.fulfilled, (state, action) => {
-        state.myUnit = action.payload;
         state.loading = false;
+        state.myUnit = action.payload;
+        state.status = action.meta.requestStatus === 'fulfilled';
       })
       .addCase(getMyUnit.rejected, (state, action) => {
         state.loading = false;
@@ -73,6 +75,7 @@ export const unitSlice = createSlice({
       .addCase(publicUnit.fulfilled, (state, action) => {
         state.loading = false;
         state.unit = action.payload;
+        state.status = action.meta.requestStatus === 'fulfilled';
       })
       .addCase(publicUnit.rejected, (state, action) => {
         state.loading = false;
@@ -85,7 +88,7 @@ export const unitSlice = createSlice({
       })
       .addCase(createUnit.fulfilled, (state, action) => {
         state.loading = false;
-        state.myUnit = action.payload;
+        state.status = action.meta.requestStatus === 'fulfilled';
       })
       .addCase(createUnit.rejected, (state, action) => {
         state.loading = false;
