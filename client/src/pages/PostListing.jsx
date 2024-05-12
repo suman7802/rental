@@ -1,21 +1,68 @@
-import {useRef} from 'react';
+import {
+  GoogleMap,
+  Marker,
+  useLoadScript,
+  StandaloneSearchBox,
+} from '@react-google-maps/api';
 import {useDispatch} from 'react-redux';
 import {createUnit} from '../redux/slice/unit';
+import {useRef, useState, useEffect} from 'react';
+
+const libraries = ['places'];
 
 export default function PostListing() {
   const formRef = useRef();
   const dispatch = useDispatch();
+  const [searchBox, setSearchBox] = useState(null);
+  const [location, setLocation] = useState({lat: 0, lng: 0});
+  const {isLoaded, loadError} = useLoadScript({
+    googleMapsApiKey: import.meta.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+    libraries,
+  });
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        setLocation({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+      });
+    }
+  }, []);
+
+  const onPlacesChanged = () => {
+    setLocation({
+      lat: searchBox.getPlaces()[0].geometry.location.lat(),
+      lng: searchBox.getPlaces()[0].geometry.location.lng(),
+    });
+  };
+
+  const handleMapClick = (event) => {
+    setLocation({
+      lat: event.latLng.lat(),
+      lng: event.latLng.lng(),
+    });
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
     const formData = new FormData(formRef.current);
+
+    formData.append('latitude', location.lat);
+    formData.append('longitude', location.lng);
+
     const data = Object.fromEntries(formData.entries());
+
+    console.log(data);
     dispatch(createUnit(data));
   };
 
+  if (loadError) return 'Error loading maps';
+  if (!isLoaded) return 'Loading Maps';
+
   return (
-    <div className="postListing pt-32 h-screen flex flex-row justify-center">
+    <div className="postListing pt-32 min-h-screen flex flex-row justify-center">
       <form
         ref={formRef}
         className="w-[90vw] h-fit md:w-[40vw] bg-[#D1D5DA] p-5 rounded-lg mb-24 flex flex-col gap-5"
@@ -24,32 +71,50 @@ export default function PostListing() {
           Post Listing
         </h1>
 
-        <div className="flex flex-col space-y-2">
+        <input
+          type="text"
+          name="title"
+          id="title"
+          placeholder="Title"
+          className="rounded-md py-2 pl-4 outline-none"
+        />
+
+        <textarea
+          name="description"
+          id="description"
+          placeholder="Description"
+          className="rounded-md py-2 pl-4 outline-none"
+        />
+
+        <input
+          type="number"
+          name="price"
+          id="price"
+          placeholder="Price"
+          className="rounded-md py-2 pl-4 outline-none"
+        />
+
+        <StandaloneSearchBox
+          onLoad={(ref) => setSearchBox(ref)}
+          onPlacesChanged={onPlacesChanged}>
           <input
             type="text"
-            name="title"
-            id="title"
-            placeholder="Title"
-            className="rounded-md py-2 pl-4 outline-none"
+            placeholder="Search location"
+            className="rounded-md pl-4"
           />
-        </div>
-        <div className="flex flex-col space-y-2">
-          <textarea
-            name="description"
-            id="description"
-            placeholder="Description"
-            className="rounded-md py-2 pl-4 outline-none"
-          />
-        </div>
-        <div className="flex flex-col space-y-2">
-          <input
-            type="number"
-            name="price"
-            id="price"
-            placeholder="Price"
-            className="rounded-md py-2 pl-4 outline-none"
-          />
-        </div>
+        </StandaloneSearchBox>
+        <GoogleMap
+          id="map"
+          mapContainerStyle={{
+            width: '100%',
+            height: '200px',
+            borderRadius: '5px',
+          }}
+          zoom={8}
+          center={location}
+          onClick={handleMapClick}>
+          <Marker position={location} />
+        </GoogleMap>
 
         <select
           name="category"
