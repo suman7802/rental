@@ -10,6 +10,7 @@ import About from './pages/About';
 import Token from './utils/Token';
 import Profile from './pages/Profile';
 import Contact from './pages/Contact';
+import PostListing from './pages/PostListing';
 import Footer from './components/Footer';
 import NavBar from './components/NavBar';
 
@@ -29,6 +30,7 @@ export default function App() {
         <Routes>
           <Route path="/" index element={<Home />} />
           <Route path="/about" element={<About />} />
+          <Route path="/postlisting" element={<PostListing />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/auth/*" element={<Auth />} />
           <Route path="/profile/*" element={<Profile />} />

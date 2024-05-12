@@ -6,7 +6,7 @@ import validate from '../middlewares/validateAuth';
 
 const unitRoute = express.Router();
 
-unitRoute.get('/get', unit.getAll);
+unitRoute.get('/get', unit.getAll); // done in front-end
 unitRoute.get('/get/:unitId', unit.getOne);
 
 unitRoute.use(validate.auth);
