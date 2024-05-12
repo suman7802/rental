@@ -16,7 +16,7 @@ export default function PostListing() {
   const [searchBox, setSearchBox] = useState(null);
   const [location, setLocation] = useState({lat: 0, lng: 0});
   const {isLoaded, loadError} = useLoadScript({
-    googleMapsApiKey: import.meta.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
     libraries,
   });
 
@@ -58,9 +58,6 @@ export default function PostListing() {
     dispatch(createUnit(data));
   };
 
-  if (loadError) return 'Error loading maps';
-  if (!isLoaded) return 'Loading Maps';
-
   return (
     <div className="postListing pt-32 min-h-screen flex flex-row justify-center">
       <form
@@ -94,27 +91,37 @@ export default function PostListing() {
           className="rounded-md py-2 pl-4 outline-none"
         />
 
-        <StandaloneSearchBox
-          onLoad={(ref) => setSearchBox(ref)}
-          onPlacesChanged={onPlacesChanged}>
-          <input
-            type="text"
-            placeholder="Search location"
-            className="rounded-md pl-4"
-          />
-        </StandaloneSearchBox>
-        <GoogleMap
-          id="map"
-          mapContainerStyle={{
-            width: '100%',
-            height: '200px',
-            borderRadius: '5px',
-          }}
-          zoom={8}
-          center={location}
-          onClick={handleMapClick}>
-          <Marker position={location} />
-        </GoogleMap>
+        <div className="map">
+          {loadError ? (
+            <p>Error loading maps</p>
+          ) : !isLoaded ? (
+            <p>Loading Maps...</p>
+          ) : (
+            <>
+              <StandaloneSearchBox
+                onLoad={(ref) => setSearchBox(ref)}
+                onPlacesChanged={onPlacesChanged}>
+                <input
+                  type="text"
+                  placeholder="Search location"
+                  className="rounded-md pl-4 mb-3"
+                />
+              </StandaloneSearchBox>
+              <GoogleMap
+                id="map"
+                mapContainerStyle={{
+                  width: '100%',
+                  height: '200px',
+                  borderRadius: '5px',
+                }}
+                zoom={8}
+                center={location}
+                onClick={handleMapClick}>
+                <Marker position={location} />
+              </GoogleMap>
+            </>
+          )}
+        </div>
 
         <select
           name="category"
