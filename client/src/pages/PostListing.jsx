@@ -15,10 +15,10 @@ export default function PostListing() {
   };
 
   return (
-    <div className="postListing pt-32 h-screen flex flex-row justify-center items-center">
+    <div className="postListing pt-32 h-screen flex flex-row justify-center">
       <form
         ref={formRef}
-        className="w-[90vw] md:w-[40vw] bg-[#D1D5DA] p-5 rounded-lg mb-24 flex flex-col gap-5"
+        className="w-[90vw] h-fit md:w-[40vw] bg-[#D1D5DA] p-5 rounded-lg mb-24 flex flex-col gap-5"
         onSubmit={handleSubmit}>
         <h1 className="text-2xl text-center text-[#43474e] font-bold">
           Post Listing
