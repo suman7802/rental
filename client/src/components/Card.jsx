@@ -66,7 +66,7 @@ export default function Card({
           <Link
             to={`/location/${locationName}`}
             className="text-sm hover:underline hover:cursor-pointer">
-            {locationName}
+            {locationName || 'unknown'}
           </Link>
         </div>
       </div>
