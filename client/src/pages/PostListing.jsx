@@ -48,13 +48,9 @@ export default function PostListing() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const formData = new FormData(formRef.current);
-
     formData.append('latitude', location.lat);
     formData.append('longitude', location.lng);
-
     const data = Object.fromEntries(formData.entries());
-
-    console.log(data);
     dispatch(createUnit(data));
   };
 
@@ -85,9 +81,9 @@ export default function PostListing() {
 
         <input
           type="number"
-          name="price"
-          id="price"
-          placeholder="Price"
+          name="rent"
+          id="rent"
+          placeholder="Rent"
           className="rounded-md py-2 pl-4 outline-none"
         />
 
@@ -132,7 +128,7 @@ export default function PostListing() {
           <option value="thing">Thing</option>
         </select>
 
-        <input type="file" name="image" id="image" className="w-min" />
+        <input type="file" name="units" id="units" className="w-min" multiple />
 
         <button
           type="submit"

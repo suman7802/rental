@@ -30,7 +30,10 @@ export const createUnit = createAsyncThunk(
   'profile/createUnit',
   async (data, {rejectWithValue}) => {
     try {
-      const response = await AxiosInstance.post('/unit/post', data);
+      const response = await AxiosInstance.post('/unit/post', data, {
+        headers: {'Content-Type': 'multipart/form-data'},
+        timeout: 0,
+      });
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response.data);
